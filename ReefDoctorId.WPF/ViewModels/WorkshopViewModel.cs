@@ -1,5 +1,4 @@
 using GalaSoft.MvvmLight.Command;
-using IndicatorFlipcards.Services;
 using Microsoft.Practices.ServiceLocation;
 using ReefDoctorId.Core.Models;
 using ReefDoctorId.Core.ViewModels;
@@ -15,19 +14,15 @@ namespace ReefDoctorId.ViewModels
 {
     public class WorkshopViewModel : BaseViewModel
     {
-        private NavigationServiceEx _navigationService;
         private SpeciesDataModel _speciesDataModel;
 
         private Random _random = new Random();
 
-        private const int NumberOfNA = 10;
-
         public WorkshopViewModel()
         {
-            _navigationService = ServiceLocator.Current.GetInstance<NavigationServiceEx>();
             _speciesDataModel = ServiceLocator.Current.GetInstance<SpeciesDataModel>();
 
-            this.CanGoBack = true;
+            CanGoBack = true;
         }
 
         private bool _isWorkshop;
@@ -103,7 +98,7 @@ namespace ReefDoctorId.ViewModels
 
                 _isInfoVisible = value;
 
-                this.SelectedItemImages = _isInfoVisible ? this.SelectedItem.Images : new List<string>();
+                SelectedItemImages = _isInfoVisible ? SelectedItem.Images : new List<string>();
 
                 RaisePropertyChanged("IsInfoVisible");
                 RaisePropertyChanged("IsFlipEnabled");
@@ -133,7 +128,7 @@ namespace ReefDoctorId.ViewModels
                 }
 
                 _isFullScreenVisible = value;
-                this.SelectedItemImages = _isFullScreenVisible || IsInfoVisible ? this.SelectedItem.Images : new List<string>();
+                SelectedItemImages = _isFullScreenVisible || IsInfoVisible ? SelectedItem.Images : new List<string>();
 
                 RaisePropertyChanged("IsFullScreenVisible");
             }
@@ -174,14 +169,15 @@ namespace ReefDoctorId.ViewModels
 
                 _progress = value;
 
-                this.IsCompleted = _progress == _speciesItems.Count - 1;
-                
+                IsCompleted = _progress == _speciesItems.Count - 1;
+
                 RaisePropertyChanged("Progress");
             }
         }
-        
+
         private LaunchContext _launchContext;
-        public LaunchContext LaunchContext {
+        public LaunchContext LaunchContext
+        {
             get
             {
                 return _launchContext;
@@ -193,8 +189,8 @@ namespace ReefDoctorId.ViewModels
                     _launchContext = value;
                     RaisePropertyChanged("LaunchContext");
 
-                    this.IsLoading = true;
-                    this.Initialize();
+                    IsLoading = true;
+                    Initialize();
                 }
             }
         }
@@ -252,7 +248,7 @@ namespace ReefDoctorId.ViewModels
                     _selectedItem = value;
                     RaisePropertyChanged("SelectedItem");
 
-                    this.Progress = this.SpeciesItems.IndexOf(this.SelectedItem);
+                    Progress = SpeciesItems.IndexOf(SelectedItem);
                 }
             }
         }
@@ -292,15 +288,15 @@ namespace ReefDoctorId.ViewModels
                 _speciesItems = value;
                 RaisePropertyChanged("SpeciesItems");
 
-                this.SelectedIndex = 0;
-                this.SelectedItem = SpeciesItems.Count > 0 ? SpeciesItems[0] : null;
+                SelectedIndex = 0;
+                SelectedItem = SpeciesItems.Count > 0 ? SpeciesItems[0] : null;
             }
         }
-        
+
         private List<Subject> FetchExamItems(DirectoryInfo folder)
         {
             var files = folder.GetFiles();
-            var examFiles = files.Where(file => Extensions.IsImage(file.Extension)).OrderBy(file => Int32.Parse(file.Name.Split(' ')[0])).ToList();
+            var examFiles = files.Where(file => Extensions.IsImage(file.Extension)).OrderBy(file => int.Parse(file.Name.Split(' ')[0])).ToList();
             var examItems = new List<Subject>();
 
             foreach (var file in examFiles)
@@ -350,53 +346,55 @@ namespace ReefDoctorId.ViewModels
 
         private async Task Initialize()
         {
-            this.SpeciesItems = new List<Subject>();
+            SpeciesItems = new List<Subject>();
 
-            await Task.Run(() => {
-                this.IsWorkshop = this.LaunchContext.ExerciseType == ExerciseType.Workshop;
-                this.IsExam = this.LaunchContext.ExerciseType == ExerciseType.Exam;
+            await Task.Run(() =>
+            {
+                IsWorkshop = LaunchContext.ExerciseType == ExerciseType.Workshop;
+                IsExam = LaunchContext.ExerciseType == ExerciseType.Exam;
 
                 List<Subject> items = new List<Subject>();
 
-                if (this.IsExam)
+                if (IsExam)
                 {
                     var appFolder = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).Parent;
 
                     var examsFolder = appFolder.GetDirectories("Exams").First();
-                    var typeFolder = examsFolder.GetDirectories(this._launchContext.SpeciesType.ToString()).First();
-                    DirectoryInfo levelFolder = this._launchContext.SpeciesType == SpeciesType.FishFamily || this._launchContext.SpeciesType == SpeciesType.Coral || this._launchContext.SpeciesType == SpeciesType.Seagrass ? typeFolder : typeFolder.GetDirectories(this._launchContext.SurveyLevel.ToString()).First();
-                    var examFolder = levelFolder.GetDirectories(this._launchContext.ExamNumber.ToString()).First();
+                    var typeFolder = examsFolder.GetDirectories(_launchContext.SpeciesType.ToString()).First();
+                    var levelFolder = _launchContext.SpeciesType == SpeciesType.FishFamily || _launchContext.SpeciesType == SpeciesType.Coral || _launchContext.SpeciesType == SpeciesType.Seagrass ? typeFolder : typeFolder.GetDirectories(_launchContext.SurveyLevel.ToString()).First();
+                    var examFolder = levelFolder.GetDirectories(_launchContext.ExamNumber.ToString()).First();
 
-                    items.AddRange(this.FetchExamItems(examFolder));
+                    items.AddRange(FetchExamItems(examFolder));
                 }
                 else
                 {
-                    if (this.LaunchContext.SpeciesType == SpeciesType.Benthic)
+                    if (LaunchContext.SpeciesType == SpeciesType.Benthic)
                     {
                         List<Subject> benthicItems = new List<Subject>();
                         int numberItems = 0;
 
-                        if (this.LaunchContext.SurveyLevel == SurveyLevel.Indicator)
+                        if (LaunchContext.SurveyLevel == SurveyLevel.Indicator)
                         {
                             numberItems = 3;
-                            benthicItems.AddRange(_speciesDataModel.SpeciesData.Where(item => item.SpeciesType == this._launchContext.SpeciesType && item.SurveyLevel == SurveyLevel.Indicator && !item.IsNA));
+                            benthicItems.AddRange(_speciesDataModel.SpeciesData.Where(item => item.SpeciesType == _launchContext.SpeciesType && item.SurveyLevel == SurveyLevel.Indicator && !item.IsNA));
                         }
-                        else if (this.LaunchContext.SurveyLevel == SurveyLevel.Expert)
+                        else if (LaunchContext.SurveyLevel == SurveyLevel.Expert)
                         {
                             numberItems = 2;
-                            benthicItems.AddRange(_speciesDataModel.SpeciesData.Where(item => item.SpeciesType == this._launchContext.SpeciesType && item.SurveyLevel == SurveyLevel.Expert && !item.IsNA));
+                            benthicItems.AddRange(_speciesDataModel.SpeciesData.Where(item => item.SpeciesType == _launchContext.SpeciesType && item.SurveyLevel == SurveyLevel.Expert && !item.IsNA));
                         }
 
                         foreach (var item in benthicItems)
                         {
                             item.Images.Shuffle();
                             var subItems = item.Images.Take(numberItems);
-                            
+
                             // Add up to 3 items for each code
                             foreach (var subItem in subItems)
                             {
                                 items.Add(
-                                    new Subject() {
+                                    new Subject()
+                                    {
                                         Name = item.Name,
                                         Images = new List<string> { subItem },
                                         SpeciesType = item.SpeciesType,
@@ -408,14 +406,14 @@ namespace ReefDoctorId.ViewModels
                     }
                     else
                     {
-                        if (this.LaunchContext.SpeciesType == SpeciesType.JuvenileFish)
+                        if (LaunchContext.SpeciesType == SpeciesType.JuvenileFish)
                         {
                             // Fetch Fish with Juvenile info
-                            if (this.LaunchContext.SurveyLevel == SurveyLevel.Indicator)
+                            if (LaunchContext.SurveyLevel == SurveyLevel.Indicator)
                             {
-                                items.AddRange(_speciesDataModel.SpeciesData.Where(item => item.SpeciesType == SpeciesType.Fish && item.SurveyLevel == this.LaunchContext.SurveyLevel && item.JuvenileImages != null && item.JuvenileImages.Count > 0));
+                                items.AddRange(_speciesDataModel.SpeciesData.Where(item => item.SpeciesType == SpeciesType.Fish && item.SurveyLevel == LaunchContext.SurveyLevel && item.JuvenileImages != null && item.JuvenileImages.Count > 0));
                             }
-                            else if (this.LaunchContext.SurveyLevel == SurveyLevel.Expert)
+                            else if (LaunchContext.SurveyLevel == SurveyLevel.Expert)
                             {
                                 items.AddRange(_speciesDataModel.SpeciesData.Where(item => item.SpeciesType == SpeciesType.Fish && item.JuvenileImages != null && item.JuvenileImages.Count > 0));
                             }
@@ -428,23 +426,23 @@ namespace ReefDoctorId.ViewModels
                         else
                         {
                             // Fetch Items For Configuration
-                            if (this.LaunchContext.SurveyLevel == SurveyLevel.Indicator)
+                            if (LaunchContext.SurveyLevel == SurveyLevel.Indicator)
                             {
-                                items.AddRange(_speciesDataModel.SpeciesData.Where(item => item.SpeciesType == this._launchContext.SpeciesType && item.SurveyLevel == SurveyLevel.Indicator && !item.IsNA));
+                                items.AddRange(_speciesDataModel.SpeciesData.Where(item => item.SpeciesType == _launchContext.SpeciesType && item.SurveyLevel == SurveyLevel.Indicator && !item.IsNA));
                             }
-                            else if (this.LaunchContext.SurveyLevel == SurveyLevel.Expert)
+                            else if (LaunchContext.SurveyLevel == SurveyLevel.Expert)
                             {
-                                items.AddRange(_speciesDataModel.SpeciesData.Where(item => item.SpeciesType == this._launchContext.SpeciesType && !item.IsNA));
+                                items.AddRange(_speciesDataModel.SpeciesData.Where(item => item.SpeciesType == _launchContext.SpeciesType && !item.IsNA));
                             }
 
-                            this.SelectImages(items);
+                            SelectImages(items);
                         }
                     }
 
                     // Fetch NA Items
-                    if (this.LaunchContext.SpeciesType == SpeciesType.Fish || this.LaunchContext.SpeciesType == SpeciesType.Invert)
+                    if (LaunchContext.SpeciesType == SpeciesType.Fish || LaunchContext.SpeciesType == SpeciesType.Invert)
                     {
-                        var NAItems = _speciesDataModel.SpeciesData.Where(item => item.SpeciesType == this._launchContext.SpeciesType && item.IsNA).ToList();
+                        var NAItems = _speciesDataModel.SpeciesData.Where(item => item.SpeciesType == _launchContext.SpeciesType && item.IsNA).ToList();
                         NAItems.Shuffle();
                         NAItems = NAItems.Take(Convert.ToInt32(items.Count / 4)).ToList();
                         items.AddRange(NAItems);
@@ -454,26 +452,26 @@ namespace ReefDoctorId.ViewModels
                     items.Shuffle();
                 }
 
-                this.AssignIndexes(items);
+                AssignIndexes(items);
 
                 // Add dud completion item
                 items.Add(new Subject());
-                this.SpeciesItems = items;
+                SpeciesItems = items;
 
-                this.SelectedIndex = 0;
-                this.SelectedItem = this.SpeciesItems[0];
+                SelectedIndex = 0;
+                SelectedItem = SpeciesItems[0];
 
-                this.IsLoading = false;
+                IsLoading = false;
             });
         }
 
         public void TearDown()
         {
-            this.IsCompleted = false;
-            this.SelectedItem = null;
-            this.SelectedIndex = 0;
-            this.SpeciesItems = new List<Subject>();
-            this.IsLoading = true;
+            IsCompleted = false;
+            SelectedItem = null;
+            SelectedIndex = 0;
+            SpeciesItems = new List<Subject>();
+            IsLoading = true;
         }
 
         private RelayCommand _showNameCommand;
@@ -481,9 +479,9 @@ namespace ReefDoctorId.ViewModels
                     ?? (_showNameCommand = new RelayCommand(
                     () =>
                     {
-                        if (this.SelectedItem != null)
+                        if (SelectedItem != null)
                         {
-                            this.SelectedItem.IsNameVisible = true;
+                            SelectedItem.IsNameVisible = true;
                         }
                     }));
 
@@ -492,9 +490,9 @@ namespace ReefDoctorId.ViewModels
                     ?? (_hideNameCommand = new RelayCommand(
                     () =>
                     {
-                        if (this.SelectedItem != null)
+                        if (SelectedItem != null)
                         {
-                            this.SelectedItem.IsNameVisible = false;
+                            SelectedItem.IsNameVisible = false;
                         }
                     }));
 
@@ -503,7 +501,7 @@ namespace ReefDoctorId.ViewModels
                     ?? (_showInfoCommand = new RelayCommand(
                     () =>
                     {
-                        this.IsInfoVisible = true;
+                        IsInfoVisible = true;
                     }));
 
         private RelayCommand _hideInfoCommand;
@@ -511,7 +509,7 @@ namespace ReefDoctorId.ViewModels
                     ?? (_hideInfoCommand = new RelayCommand(
                     () =>
                     {
-                        this.IsInfoVisible = false;
+                        IsInfoVisible = false;
                     }));
 
         private RelayCommand _hideImageCommand;
@@ -519,17 +517,7 @@ namespace ReefDoctorId.ViewModels
                     ?? (_hideImageCommand = new RelayCommand(
                     () =>
                     {
-                        this.IsFullScreenVisible = false;
-                    }));
-
-        private RelayCommand _goBackCommand;
-        public RelayCommand GoBackCommand => _goBackCommand
-                    ?? (_goBackCommand = new RelayCommand(
-                    () =>
-                    {
-                        SpeciesItems = new List<Subject>();
-                        this.TearDown();
-                        _navigationService.GoBack();
+                        IsFullScreenVisible = false;
                     }));
 
         private RelayCommand<object> _showImageCommand;
@@ -539,14 +527,14 @@ namespace ReefDoctorId.ViewModels
                     {
                         if (param is string)
                         {
-                            this.SelectedImage = (string)param;
+                            SelectedImage = (string)param;
                         }
                         else if ((Subject)param != null)
                         {
-                            this.SelectedImage = ((Subject)param).ImagePath;
+                            SelectedImage = ((Subject)param).ImagePath;
                         }
-                        
-                        this.IsFullScreenVisible = true;
+
+                        IsFullScreenVisible = true;
                     }));
 
         private RelayCommand<object> _toggleImageCommand;
@@ -556,14 +544,14 @@ namespace ReefDoctorId.ViewModels
                     {
                         if (param is string)
                         {
-                            this.SelectedImage = (string)param;
+                            SelectedImage = (string)param;
                         }
                         else if ((Subject)param != null)
                         {
-                            this.SelectedImage = ((Subject)param).ImagePath;
+                            SelectedImage = ((Subject)param).ImagePath;
                         }
 
-                        this.IsFullScreenVisible = !this.IsFullScreenVisible;
+                        IsFullScreenVisible = !IsFullScreenVisible;
                     }));
     }
 }

@@ -10,7 +10,7 @@ namespace ReefDoctorId.WPF.Views
     public partial class MainPage : BasePage
     {
         private static bool introSeen = false;
-        
+
         public MainPage()
         {
             InitializeComponent();
@@ -23,20 +23,20 @@ namespace ReefDoctorId.WPF.Views
 
             Intro.Opacity = 1;
 
-            this.Loaded += OnLoaded;
+            Loaded += OnLoaded;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             if (introSeen == false)
             {
-                VisualStateManager.GoToElementState(this.RootGrid, "Splash", false);
+                VisualStateManager.GoToElementState(RootGrid, "Splash", false);
             }
         }
 
         private void Splash_Completed(object sender, EventArgs e)
         {
-            VisualStateManager.GoToElementState(this.RootGrid, "Menu", false);
+            VisualStateManager.GoToElementState(RootGrid, "Menu", false);
             introSeen = true;
         }
 

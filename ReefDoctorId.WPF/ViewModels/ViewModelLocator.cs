@@ -8,15 +8,12 @@ namespace ReefDoctorId.ViewModels
 {
     public class ViewModelLocator
     {
-        NavigationServiceEx _navigationService = new NavigationServiceEx();
-        SpeciesDataModel _speciesDataModel = new SpeciesDataModel();
-
         public ViewModelLocator()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            SimpleIoc.Default.Register(() => _navigationService);
-            SimpleIoc.Default.Register(() => _speciesDataModel);
+            SimpleIoc.Default.Register(() => new NavigationServiceEx());
+            SimpleIoc.Default.Register(() => new SpeciesDataModel());
             Register<MainViewModel, MainPage>();
             Register<WorkshopViewModel, WorkshopPage>();
             Register<SpeciesBrowserViewModel, SpeciesBrowserPage>();

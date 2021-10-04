@@ -1,12 +1,8 @@
-﻿using GalaSoft.MvvmLight.Threading;
-using System;
-using System.ComponentModel;
+﻿using System;
 using System.Globalization;
 using System.IO;
-using System.Threading;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 
 namespace ReefDoctorId.UWP.Converters
 {

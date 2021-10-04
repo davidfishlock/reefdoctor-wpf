@@ -40,8 +40,8 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 Command="{Binding CloseLevelDialogCommand}"
-                IsHitTestVisible="{Binding IsInfoVisible}"
-                IsTabStop="{Binding IsInfoVisible}"
+                IsHitTestVisible="{Binding IsLevelDialogOpen}"
+                IsTabStop="{Binding IsLevelDialogOpen}"
                 Style="{DynamicResource DialogCloseButton}">
                 <Viewbox Height="11" Stretch="Uniform">
                     <Path

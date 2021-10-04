@@ -1,35 +1,28 @@
 using GalaSoft.MvvmLight.Command;
 using ReefDoctorId.UWP;
-using IndicatorFlipcards.Services;
 using Microsoft.Practices.ServiceLocation;
 using ReefDoctorId.Core.Models;
-using ReefDoctorId.Core.ViewModels;
-using ReefDoctorId.UWP;
 using ReefDoctorId.WPF.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ReefDoctorId.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
-        private NavigationServiceEx _navigationService;
         private SpeciesDataModel _speciesDataModel;
         private LaunchContext _launchContext;
         private string _correctPassword = "nudibranch";
 
         public MainViewModel()
         {
-            _navigationService = ServiceLocator.Current.GetInstance<NavigationServiceEx>();
             _speciesDataModel = ServiceLocator.Current.GetInstance<SpeciesDataModel>();
 
-            this.CanGoBack = false;
+            CanGoBack = false;
 
-            this.Initialize();
+            Initialize();
         }
 
         private bool _isLoading = true;
@@ -150,7 +143,7 @@ namespace ReefDoctorId.ViewModels
                     _currentPassword = value;
                     RaisePropertyChanged("CurrentPassword");
 
-                    this.IsPasswordCorrect = (this._correctPassword == this.CurrentPassword);
+                    IsPasswordCorrect = (_correctPassword == CurrentPassword);
                 }
             }
         }
@@ -211,20 +204,18 @@ namespace ReefDoctorId.ViewModels
             var appFolder = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).Parent;
             var examsFolder = appFolder.GetDirectories("Exams");
 
-            this.IsExamsEnabled = examsFolder.Count() > 0 ? true : false;
+            IsExamsEnabled = examsFolder.Count() > 0;
         }
 
-        private async Task Initialize()
+        private void Initialize()
         {
-            this.IsLoading = true;
+            IsLoading = true;
 
-            await Task.Run(async () => {
-                this.CheckExams();
+            CheckExams();
 
-                await _speciesDataModel.LoadData();
-            });
+            _speciesDataModel.LoadData();
 
-            this.IsLoading = false;
+            IsLoading = false;
         }
 
         private RelayCommand<string> _startWorkshopCommand;
@@ -232,32 +223,33 @@ namespace ReefDoctorId.ViewModels
                     ?? (_startWorkshopCommand = new RelayCommand<string>(
                     param =>
                     {
-                        this._launchContext = new LaunchContext()
+                        _launchContext = new LaunchContext()
                         {
                             ExerciseType = param.ToExerciseType(),
                             SpeciesType = param.ToSpeciesType()
                         };
 
-                        if (_launchContext.SpeciesType == SpeciesType.FishFamily || _launchContext.SpeciesType == SpeciesType.Coral || this._launchContext.SpeciesType == SpeciesType.Seagrass)
+                        if (_launchContext.SpeciesType == SpeciesType.FishFamily || _launchContext.SpeciesType == SpeciesType.Coral || _launchContext.SpeciesType == SpeciesType.Seagrass)
                         {
                             if (_launchContext.ExerciseType == ExerciseType.Exam)
                             {
-                                if (!this.IsPasswordCorrect)
+                                if (!IsPasswordCorrect)
                                 {
-                                    this.IsPasswordDialogOpen = true;
+                                    IsPasswordDialogOpen = true;
                                 }
                                 else
                                 {
-                                    this.ShowExamSelect();
+                                    ShowExamSelect();
                                 }
                             }
                             else
                             {
-                                _navigationService.Navigate("/Views/WorkshopPage.xaml", _launchContext);
+                                NavigationService.Navigate("/Views/WorkshopPage.xaml", _launchContext);
                             }
                         }
-                        else {
-                            this.ShowLevelSelect();
+                        else
+                        {
+                            ShowLevelSelect();
                         }
                     }));
 
@@ -266,7 +258,7 @@ namespace ReefDoctorId.ViewModels
                     ?? (_showSpeciesBrowserCommand = new RelayCommand<string>(
                     param =>
                     {
-                        _navigationService.Navigate("/Views/SpeciesBrowserPage.xaml", null);
+                        NavigationService.Navigate("/Views/SpeciesBrowserPage.xaml", null);
                     }));
 
         private RelayCommand<string> _chooseLevelCommand;
@@ -284,22 +276,22 @@ namespace ReefDoctorId.ViewModels
                                 break;
                         }
 
-                        this.IsLevelDialogOpen = false;
+                        IsLevelDialogOpen = false;
 
                         if (_launchContext.ExerciseType == ExerciseType.Exam)
                         {
-                            if (!this.IsPasswordCorrect)
+                            if (!IsPasswordCorrect)
                             {
-                                this.IsPasswordDialogOpen = true;
+                                IsPasswordDialogOpen = true;
                             }
                             else
                             {
-                                this.ShowExamSelect();
+                                ShowExamSelect();
                             }
                         }
                         else
                         {
-                            _navigationService.Navigate("/Views/WorkshopPage.xaml", _launchContext);
+                            NavigationService.Navigate("/Views/WorkshopPage.xaml", _launchContext);
                         }
                     }));
 
@@ -307,8 +299,8 @@ namespace ReefDoctorId.ViewModels
         public RelayCommand CloseLevelDialogCommand => _closeLevelDialogCommand
                     ?? (_closeLevelDialogCommand = new RelayCommand(
                     () =>
-                    {                        
-                        this.IsLevelDialogOpen = false;
+                    {
+                        IsLevelDialogOpen = false;
                     }));
 
         private RelayCommand _closeExamDialogCommand;
@@ -316,7 +308,7 @@ namespace ReefDoctorId.ViewModels
                     ?? (_closeExamDialogCommand = new RelayCommand(
                     () =>
                     {
-                        this.IsExamDialogOpen = false;
+                        IsExamDialogOpen = false;
                     }));
 
         private RelayCommand _closePasswordDialogCommand;
@@ -324,7 +316,7 @@ namespace ReefDoctorId.ViewModels
                     ?? (_closePasswordDialogCommand = new RelayCommand(
                     () =>
                     {
-                        this.IsPasswordDialogOpen = false;
+                        IsPasswordDialogOpen = false;
                     }));
 
         private RelayCommand _submitPasswordCommand;
@@ -332,11 +324,11 @@ namespace ReefDoctorId.ViewModels
                     ?? (_submitPasswordCommand = new RelayCommand(
                     () =>
                     {
-                        this.IsPasswordDialogOpen = false;
+                        IsPasswordDialogOpen = false;
 
-                        if (this.CurrentPassword == this._correctPassword)
+                        if (CurrentPassword == _correctPassword)
                         {
-                            this.ShowExamSelect();
+                            ShowExamSelect();
                         }
                     }));
 
@@ -358,15 +350,15 @@ namespace ReefDoctorId.ViewModels
                                 break;
                         }
 
-                        this.IsExamDialogOpen = false;
+                        IsExamDialogOpen = false;
 
-                        _navigationService.Navigate("/Views/WorkshopPage.xaml", _launchContext);
+                        NavigationService.Navigate("/Views/WorkshopPage.xaml", _launchContext);
                     }));
 
         private void ShowLevelSelect()
         {
-            this.LevelMessage = String.Format("Select a UVC level for your {0} {1}.", this._launchContext.SpeciesType.ToFriendlyString(), this._launchContext.ExerciseType.ToString().ToLower());
-            this.IsLevelDialogOpen = true;
+            LevelMessage = string.Format("Select a UVC level for your {0} {1}.", _launchContext.SpeciesType.ToFriendlyString(), _launchContext.ExerciseType.ToString().ToLower());
+            IsLevelDialogOpen = true;
         }
 
         private void ShowExamSelect()
@@ -374,28 +366,28 @@ namespace ReefDoctorId.ViewModels
             // Check How Many Exams
             var appFolder = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).Parent;
             var examsFolder = appFolder.GetDirectories("Exams").First();
-            var typeFolder = examsFolder.GetDirectories(this._launchContext.SpeciesType.ToString()).First();
-            
+            var typeFolder = examsFolder.GetDirectories(_launchContext.SpeciesType.ToString()).First();
+
             IReadOnlyList<DirectoryInfo> exams;
-            if (this._launchContext.SpeciesType == SpeciesType.FishFamily || this._launchContext.SpeciesType == SpeciesType.Coral || this._launchContext.SpeciesType == SpeciesType.Seagrass)
+            if (_launchContext.SpeciesType == SpeciesType.FishFamily || _launchContext.SpeciesType == SpeciesType.Coral || _launchContext.SpeciesType == SpeciesType.Seagrass)
             {
                 exams = typeFolder.GetDirectories();
             }
             else
             {
-                var levelFolder = typeFolder.GetDirectories(this._launchContext.SurveyLevel.ToString()).First();
+                var levelFolder = typeFolder.GetDirectories(_launchContext.SurveyLevel.ToString()).First();
                 exams = levelFolder.GetDirectories();
             }
 
             if (exams.Count > 1)
             {
-                this.AvailableExams = exams.Count;
-                this.IsExamDialogOpen = true;               
+                AvailableExams = exams.Count;
+                IsExamDialogOpen = true;
             }
             else
             {
                 _launchContext.ExamNumber = 1;
-                _navigationService.Navigate("/Views/WorkshopPage.xaml", _launchContext);
+                NavigationService.Navigate("/Views/WorkshopPage.xaml", _launchContext);
             }
         }
     }

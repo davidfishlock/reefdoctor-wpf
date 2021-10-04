@@ -1,15 +1,10 @@
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using IndicatorFlipcards.Services;
 using Microsoft.Practices.ServiceLocation;
 using ReefDoctorId.Core.Models;
 using ReefDoctorId.WPF.Models;
-using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using ReefDoctorId.Core.ViewModels;
-using System.Windows.Threading;
 using GalaSoft.MvvmLight.Threading;
 using System.Threading;
 
@@ -17,25 +12,15 @@ namespace ReefDoctorId.ViewModels
 {
     public class SpeciesBrowserViewModel : BaseViewModel
     {
-        private NavigationServiceEx _navigationService;
-        private SpeciesDataModel _speciesDataModel;
+        private readonly SpeciesDataModel _speciesDataModel;
 
         public SpeciesBrowserViewModel()
         {
-            _navigationService = ServiceLocator.Current.GetInstance<NavigationServiceEx>();
             _speciesDataModel = ServiceLocator.Current.GetInstance<SpeciesDataModel>();
 
-            this.CanGoBack = true;
+            CanGoBack = true;
 
-            this.Initialize();
-        }
-
-        private SpeciesType StringToSpeciesType(string inputString)
-        {
-            string speciesType = inputString.Split('-')[0];
-
-            Enum.TryParse(speciesType, out SpeciesType enumValue);
-            return enumValue;
+            Initialize();
         }
 
         private bool _isLoading = true;
@@ -93,7 +78,7 @@ namespace ReefDoctorId.ViewModels
                 _selectedType = value;
                 RaisePropertyChanged("SelectedType");
 
-                this.ApplyFilter();
+                ApplyFilter();
             }
         }
 
@@ -114,7 +99,7 @@ namespace ReefDoctorId.ViewModels
                 _selectedLevel = value;
                 RaisePropertyChanged("SelectedLevel");
 
-                this.ApplyFilter();
+                ApplyFilter();
             }
         }
 
@@ -137,8 +122,8 @@ namespace ReefDoctorId.ViewModels
 
                 if (value != null)
                 {
-                    this.MoreImages = this.SelectedItem.Images.Except(new List<string>() { this.SelectedItem.Images[0] }).ToList();
-                    this.SelectedImage = this.SelectedItem.Images != null && this.SelectedItem.Images.Count > 0 ? this.SelectedItem.Images[0] : null;
+                    MoreImages = SelectedItem.Images.Except(new List<string>() { SelectedItem.Images[0] }).ToList();
+                    SelectedImage = SelectedItem.Images != null && SelectedItem.Images.Count > 0 ? SelectedItem.Images[0] : null;
                 }
 
                 RaisePropertyChanged("SelectedItem");
@@ -231,7 +216,6 @@ namespace ReefDoctorId.ViewModels
             }
         }
 
-
         private List<SpeciesType> _speciesSelections = new List<SpeciesType> { SpeciesType.Fish, SpeciesType.FishFamily, SpeciesType.Invert, SpeciesType.Benthic, SpeciesType.Coral, SpeciesType.Seagrass };
         public List<SpeciesType> SpeciesSelections
         {
@@ -289,75 +273,67 @@ namespace ReefDoctorId.ViewModels
             }
         }
 
-        private async Task Initialize()
+        private void Initialize()
         {
-            this.IsLoading = true;
+            IsLoading = true;
 
-            this.AllSpecies = _speciesDataModel.SpeciesData;
-            this.ApplyFilter();
+            AllSpecies = _speciesDataModel.SpeciesData;
+            ApplyFilter();
 
-            this.IsLoading = false;
+            IsLoading = false;
         }
 
         private void ApplyFilter()
         {
-            this.SelectedItem = null;
+            SelectedItem = null;
 
-            if (this.SelectedType == SpeciesType.Benthic)
+            if (SelectedType == SpeciesType.Benthic)
             {
-                this.LevelSelections = new List<SurveyLevel> { SurveyLevel.Indicator, SurveyLevel.Expert };
-                if (this.SelectedLevel == SurveyLevel.All)
+                LevelSelections = new List<SurveyLevel> { SurveyLevel.Indicator, SurveyLevel.Expert };
+                if (SelectedLevel == SurveyLevel.All)
                 {
-                    this.SelectedLevel = SurveyLevel.Indicator;
-                } 
+                    SelectedLevel = SurveyLevel.Indicator;
+                }
             }
             else
             {
-                this.LevelSelections = new List<SurveyLevel> { SurveyLevel.All, SurveyLevel.Indicator, SurveyLevel.Expert };
+                LevelSelections = new List<SurveyLevel> { SurveyLevel.All, SurveyLevel.Indicator, SurveyLevel.Expert };
             }
 
-            if (this.SelectedType == SpeciesType.FishFamily || this.SelectedType == SpeciesType.Coral || this.SelectedType == SpeciesType.Seagrass)
+            if (SelectedType == SpeciesType.FishFamily || SelectedType == SpeciesType.Coral || SelectedType == SpeciesType.Seagrass)
             {
-                this.IsLevelSelectVisible = false; 
+                IsLevelSelectVisible = false;
 
-                this.CurrentFilter = AllSpecies.Where(
-                    item => 
-                    item.SpeciesType == this.SelectedType)
+                CurrentFilter = AllSpecies.Where(
+                    item =>
+                    item.SpeciesType == SelectedType)
                     .OrderBy(item => item.Name)
                     .ToList();
             }
             else
             {
-                this.IsLevelSelectVisible = true;
+                IsLevelSelectVisible = true;
 
-                this.CurrentFilter = AllSpecies.Where(
+                CurrentFilter = AllSpecies.Where(
                     item =>
-                    (this.SelectedType == SpeciesType.All 
-                    || item.SpeciesType == this.SelectedType) 
-                    && (this.SelectedLevel == SurveyLevel.All 
-                    || item.SurveyLevel == this.SelectedLevel) 
+                    (SelectedType == SpeciesType.All
+                    || item.SpeciesType == SelectedType)
+                    && (SelectedLevel == SurveyLevel.All
+                    || item.SurveyLevel == SelectedLevel)
                     && !item.IsNA)
                     .OrderBy(item => item.Name)
                     .ToList();
             }
-            
-            this.SelectedItem = this.CurrentFilter[0];
-        }
 
-        private RelayCommand _goBackCommand;
-        public RelayCommand GoBackCommand => _goBackCommand
-                    ?? (_goBackCommand = new RelayCommand(
-                    () =>
-                    {
-                        _navigationService.GoBack();
-                    }));
+            SelectedItem = CurrentFilter[0];
+        }
 
         private RelayCommand<object> _showImageCommand;
         public RelayCommand<object> ShowImageCommand => _showImageCommand
                     ?? (_showImageCommand = new RelayCommand<object>(
                     param =>
                     {
-                        this.IsFullScreenVisible = true;
+                        IsFullScreenVisible = true;
                     }));
 
         private RelayCommand<object> _hideImageCommand;
@@ -365,7 +341,7 @@ namespace ReefDoctorId.ViewModels
                     ?? (_hideImageCommand = new RelayCommand<object>(
                     param =>
                     {
-                        this.IsFullScreenVisible = false;
+                        IsFullScreenVisible = false;
                     }));
 
         private RelayCommand<object> _toggleImageCommand;
@@ -373,7 +349,7 @@ namespace ReefDoctorId.ViewModels
                     ?? (_toggleImageCommand = new RelayCommand<object>(
                     param =>
                     {
-                        this.IsFullScreenVisible = !this.IsFullScreenVisible;
+                        IsFullScreenVisible = !IsFullScreenVisible;
                     }));
 
         private RelayCommand<object> _selectImageCommand;
@@ -381,11 +357,12 @@ namespace ReefDoctorId.ViewModels
                     ?? (_selectImageCommand = new RelayCommand<object>(
                     param =>
                     {
-                        this.SelectedImage = (string)param;
+                        SelectedImage = (string)param;
 
-                        DispatcherHelper.RunAsync(() => {
+                        DispatcherHelper.RunAsync(() =>
+                        {
                             Thread.Sleep(200);
-                            this.IsFullScreenVisible = true;
+                            IsFullScreenVisible = true;
                         });
                     }));
     }

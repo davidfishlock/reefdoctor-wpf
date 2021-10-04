@@ -1,10 +1,4 @@
 ﻿using GalaSoft.MvvmLight.Threading;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace ReefDoctorId.WPF
@@ -14,7 +8,7 @@ namespace ReefDoctorId.WPF
     /// </summary>
     public partial class App : Application
     {
-        public App ()
+        public App()
         {
             DispatcherHelper.Initialize();
         }

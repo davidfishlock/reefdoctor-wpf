@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight;
-using ReefDoctorId.Core.Models;
+﻿using ReefDoctorId.Core.Models;
 using ReefDoctorId.ViewModels;
 using System.Collections.Generic;
 
@@ -12,7 +11,7 @@ namespace ReefDoctorId.Core.ViewModels
         {
             get
             {
-                 return _isNameVisible;
+                return _isNameVisible;
             }
             set
             {

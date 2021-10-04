@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace ReefDoctorId.WPF.Views
@@ -8,20 +7,20 @@ namespace ReefDoctorId.WPF.Views
     {
         public static readonly DependencyProperty StateProperty =
             DependencyProperty.Register("State",
-                                        typeof(String),
+                                        typeof(string),
                                         typeof(StateLoader),
-                                        new PropertyMetadata(String.Empty,
+                                        new PropertyMetadata(string.Empty,
                                             new PropertyChangedCallback(OnStateChanged)));
 
-        public static void SetState(DependencyObject obj, String value)
+        public static void SetState(DependencyObject obj, string value)
         {
             obj.SetValue(StateProperty, value);
         }
 
-        public static String GetState(Control obj)
+        public static string GetState(Control obj)
         {
-            return (String)obj.GetValue(StateProperty);
-        } 
+            return (string)obj.GetValue(StateProperty);
+        }
 
         internal static void OnStateChanged(DependencyObject target, DependencyPropertyChangedEventArgs args)
         {

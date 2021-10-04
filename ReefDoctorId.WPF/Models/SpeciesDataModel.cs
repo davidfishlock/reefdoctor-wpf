@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ReefDoctorId.WPF.Models
 {
@@ -23,15 +22,14 @@ namespace ReefDoctorId.WPF.Models
         private void LoadCodeStrings()
         {
             var appFolder = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).Parent;
-            List<Subject> items = new List<Subject>();
 
             var dataFolder = appFolder.GetDirectories("Species Data").First();
             var benthicFolder = dataFolder.GetDirectories("Benthic").First();
             var seagrassFolder = dataFolder.GetDirectories("Seagrass").First();
 
-            var indicatorBenthicFile = benthicFolder.GetFiles("IndicatorCodes.txt").FirstOrDefault() as FileInfo;
-            var expertBenthicFile = benthicFolder.GetFiles("ExpertCodes.txt").FirstOrDefault() as FileInfo;
-            var seagrassFile = seagrassFolder.GetFiles("Codes.txt").FirstOrDefault() as FileInfo;
+            var indicatorBenthicFile = benthicFolder.GetFiles("IndicatorCodes.txt").FirstOrDefault();
+            var expertBenthicFile = benthicFolder.GetFiles("ExpertCodes.txt").FirstOrDefault();
+            var seagrassFile = seagrassFolder.GetFiles("Codes.txt").FirstOrDefault();
 
             if (indicatorBenthicFile != null)
             {
@@ -76,9 +74,9 @@ namespace ReefDoctorId.WPF.Models
             }
         }
 
-        private async Task<List<string>> GetSpeciesInfo(DirectoryInfo folder)
+        private List<string> GetSpeciesInfo(DirectoryInfo folder)
         {
-            var infoFile = folder.GetFiles("Info.txt").FirstOrDefault() as FileInfo;
+            var infoFile = folder.GetFiles("Info.txt").FirstOrDefault();
 
             List<string> infoItems = new List<string>();
 
@@ -99,7 +97,7 @@ namespace ReefDoctorId.WPF.Models
             return infoItems;
         }
 
-        private async Task<Subject> CreateSubject(DirectoryInfo folder)
+        private Subject CreateSubject(DirectoryInfo folder)
         {
             var images = folder.GetFiles().Where(file => Extensions.IsImage(file.Extension)).ToList();
 
@@ -134,28 +132,30 @@ namespace ReefDoctorId.WPF.Models
                     imagePaths.Add(image.FullName);
                 }
 
-                var speciesInfo = await this.GetSpeciesInfo(folder);
-
+                var speciesInfo = GetSpeciesInfo(folder);
+#if DEBUG
                 if (speciesInfo == null)
                 {
                     Debug.WriteLine("Data Issues: No Species Info for: " + folder.Name);
                 }
-
+#endif      
                 return new Subject
                 {
                     Name = folder.Name,
                     Images = imagePaths,
                     JuvenileImages = juvenileImagePaths,
                     ImagePath = imagePaths[_random.Next(0, imagePaths.Count - 1)],
-                    Info = await this.GetSpeciesInfo(folder),
+                    Info = GetSpeciesInfo(folder),
                     Similar = similarItems
                 };
             }
+#if DEBUG
             else
             {
                 Debug.WriteLine("Data Issues: No Species Images for: " + folder.Name);
                 return null;
             }
+#endif
         }
 
         private List<Subject> FetchNAItems(DirectoryInfo folder, SpeciesType speciesType, int numberItems = 0)
@@ -223,7 +223,7 @@ namespace ReefDoctorId.WPF.Models
             }
         }
 
-        private async Task<List<Subject>> LoadSpeciesData(SpeciesType speciesType)
+        private List<Subject> LoadSpeciesData(SpeciesType speciesType)
         {
             var appFolder = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).Parent;
             List<Subject> items = new List<Subject>();
@@ -237,7 +237,7 @@ namespace ReefDoctorId.WPF.Models
                 var indicatorFolder = speciesTypeFolder.GetDirectories("Indicator").First();
                 foreach (var folder in indicatorFolder.GetDirectories())
                 {
-                    var subject = await this.CreateSubject(folder);
+                    var subject = CreateSubject(folder);
                     if (subject != null)
                     {
                         subject.SurveyLevel = SurveyLevel.Indicator;
@@ -255,7 +255,7 @@ namespace ReefDoctorId.WPF.Models
 
                 foreach (var folder in expertFolder.GetDirectories())
                 {
-                    var subject = await this.CreateSubject(folder);
+                    var subject = CreateSubject(folder);
                     if (subject != null)
                     {
                         subject.SurveyLevel = SurveyLevel.Expert;
@@ -282,13 +282,13 @@ namespace ReefDoctorId.WPF.Models
                 {
                     // Fetch NA Items
                     var NAFolder = speciesTypeFolder.GetDirectories("NA").First();
-                    items.AddRange(this.FetchNAItems(NAFolder, speciesType));
+                    items.AddRange(FetchNAItems(NAFolder, speciesType));
 
                     // Add Nudibranchs!
                     if (speciesType == SpeciesType.Invert)
                     {
                         var nudibranchFolder = NAFolder.GetDirectories("Nudibranchs").First();
-                        items.AddRange(this.FetchNAItems(nudibranchFolder, speciesType));
+                        items.AddRange(FetchNAItems(nudibranchFolder, speciesType));
                     }
                 }
             }
@@ -296,7 +296,7 @@ namespace ReefDoctorId.WPF.Models
             {
                 foreach (var folder in speciesTypeFolder.GetDirectories())
                 {
-                    var subject = await this.CreateSubject(folder);
+                    var subject = CreateSubject(folder);
                     if (subject != null)
                     {
                         subject.SurveyLevel = SurveyLevel.Indicator;
@@ -322,23 +322,23 @@ namespace ReefDoctorId.WPF.Models
             return items;
         }
 
-        public async Task LoadData()
+        public void LoadData()
         {
             // Load code string mappings
-            this.LoadCodeStrings();
+            LoadCodeStrings();
 
             // Load all species data
-            this.SpeciesData = new List<Subject>();
-            this.SpeciesData.AddRange(await this.LoadSpeciesData(SpeciesType.Fish));
-            this.SpeciesData.AddRange(await this.LoadSpeciesData(SpeciesType.Invert));
-            this.SpeciesData.AddRange(await this.LoadSpeciesData(SpeciesType.Benthic));
-            this.SpeciesData.AddRange(await this.LoadSpeciesData(SpeciesType.FishFamily));
-            this.SpeciesData.AddRange(await this.LoadSpeciesData(SpeciesType.Coral));
-            this.SpeciesData.AddRange(await this.LoadSpeciesData(SpeciesType.Seagrass));
+            SpeciesData = new List<Subject>();
+            SpeciesData.AddRange(LoadSpeciesData(SpeciesType.Fish));
+            SpeciesData.AddRange(LoadSpeciesData(SpeciesType.Invert));
+            SpeciesData.AddRange(LoadSpeciesData(SpeciesType.Benthic));
+            SpeciesData.AddRange(LoadSpeciesData(SpeciesType.FishFamily));
+            SpeciesData.AddRange(LoadSpeciesData(SpeciesType.Coral));
+            SpeciesData.AddRange(LoadSpeciesData(SpeciesType.Seagrass));
 
 #if DEBUG
-            this.SpeciesData = this.SpeciesData.OrderBy(subject => subject.Images.Count).ToList();
-            foreach (var subject in this.SpeciesData.Where(subject => subject.SpeciesType == SpeciesType.Fish))
+            SpeciesData = SpeciesData.OrderBy(subject => subject.Images.Count).ToList();
+            foreach (var subject in SpeciesData.Where(subject => subject.SpeciesType == SpeciesType.Fish))
             {
                 Debug.WriteLine(subject.Name + ": " + subject.Images.Count + " images, " + (subject.Info != null && subject.Info.Count > 0) + " info data");
             }

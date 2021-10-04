@@ -16,10 +16,10 @@ namespace ReefDoctorId.WPF.Views
 
         public WorkshopPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
-        private void WorkshopPage_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void WorkshopPage_KeyDown(object sender, KeyEventArgs e)
         {
 
             switch (e.Key)
@@ -51,7 +51,7 @@ namespace ReefDoctorId.WPF.Views
                             ItemsFlipper.SelectedIndex -= 1;
                         }
                     }
-                    
+
                     e.Handled = true;
                     break;
                 case Key.Space:
@@ -74,17 +74,17 @@ namespace ReefDoctorId.WPF.Views
 
         private void BasePage_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            _viewModel = this.DataContext as WorkshopViewModel;
+            _viewModel = DataContext as WorkshopViewModel;
 
             Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
             {
                 if (_viewModel != null)
                 {
-                    _viewModel.LaunchContext = (LaunchContext)this.NavigationData;
+                    _viewModel.LaunchContext = (LaunchContext)NavigationData;
                 }
 
-                this.PreviewKeyDown += WorkshopPage_KeyDown;
-                this.Focus();
+                PreviewKeyDown += WorkshopPage_KeyDown;
+                Focus();
 
                 ItemsFlipper.SelectedIndex = 0;
             }));
@@ -92,7 +92,7 @@ namespace ReefDoctorId.WPF.Views
 
         private void BasePage_Unloaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            this.PreviewKeyDown -= WorkshopPage_KeyDown;
+            PreviewKeyDown -= WorkshopPage_KeyDown;
             _viewModel.TearDown();
         }
     }

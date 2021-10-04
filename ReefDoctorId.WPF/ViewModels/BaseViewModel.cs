@@ -2,24 +2,12 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using IndicatorFlipcards.Services;
 using Microsoft.Practices.ServiceLocation;
-using ReefDoctorId.Core.Models;
-using ReefDoctorId.Core.ViewModels;
-using ReefDoctorId.UWP;
-using ReefDoctorId.WPF.Models;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace ReefDoctorId.ViewModels
 {
-    public class BaseViewModel : ViewModelBase
+    public abstract class BaseViewModel : ViewModelBase
     {
-        private NavigationServiceEx _navigationService;
-
         private bool _canGoBack;
         public bool CanGoBack
         {
@@ -37,19 +25,34 @@ namespace ReefDoctorId.ViewModels
             }
         }
 
+        protected NavigationServiceEx NavigationService;
+
         public BaseViewModel()
         {
-            _navigationService = ServiceLocator.Current.GetInstance<NavigationServiceEx>();
+            NavigationService = ServiceLocator.Current.GetInstance<NavigationServiceEx>();
 
-            this.CanGoBack = false;
+            CanGoBack = false;
         }
-        
+
         private RelayCommand _closeAppCommand;
         public RelayCommand CloseAppCommand => _closeAppCommand
                     ?? (_closeAppCommand = new RelayCommand(
                     () =>
                     {
                         Application.Current.Shutdown();
+                    }));
+
+        private RelayCommand _goBackCommand;
+        public RelayCommand GoBackCommand => _goBackCommand
+                    ?? (_goBackCommand = new RelayCommand(
+                    () =>
+                    {
+                        if (!CanGoBack)
+                        {
+                            throw new System.Exception("Attempted to navigate back while CanGoBack is false.");
+                        }
+
+                        NavigationService.GoBack();
                     }));
     }
 }

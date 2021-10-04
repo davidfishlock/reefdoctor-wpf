@@ -1,7 +1,6 @@
 using ReefDoctorId.WPF.Views;
 using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Navigation;
 
 namespace IndicatorFlipcards.Services

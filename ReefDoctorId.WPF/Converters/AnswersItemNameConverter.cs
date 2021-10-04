@@ -1,5 +1,4 @@
-﻿using ReefDoctorId.Core.Models;
-using ReefDoctorId.Core.ViewModels;
+﻿using ReefDoctorId.Core.ViewModels;
 using System;
 using System.Globalization;
 using System.Windows;
@@ -11,11 +10,11 @@ namespace ReefDoctorId.UWP.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo language)
         {
-            var nameString = String.Empty;
+            var nameString = string.Empty;
 
             var subject = value is Subject ? (Subject)value : null;
 
-            if (subject  != null)
+            if (subject != null)
             {
                 var isAnswersItem = (subject.Index == 0);
 

@@ -1,9 +1,5 @@
-﻿using ReefDoctorId.Core.Models;
-using ReefDoctorId.ViewModels;
-using System;
-using System.Windows.Controls;
+﻿using ReefDoctorId.ViewModels;
 using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace ReefDoctorId.WPF.Views
 {
@@ -16,16 +12,16 @@ namespace ReefDoctorId.WPF.Views
 
         public SpeciesBrowserPage()
         {
-            this.InitializeComponent();
-            this.PreviewKeyDown += SpeciesBrowserPage_PreviewKeyDown;
+            InitializeComponent();
+            PreviewKeyDown += SpeciesBrowserPage_PreviewKeyDown;
 
-            this.Loaded += SpeciesBrowserPage_Loaded;
+            Loaded += SpeciesBrowserPage_Loaded;
         }
 
 
         private void SpeciesBrowserPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            _viewModel = this.DataContext as SpeciesBrowserViewModel;
+            _viewModel = DataContext as SpeciesBrowserViewModel;
         }
 
         private void SpeciesBrowserPage_PreviewKeyDown(object sender, KeyEventArgs e)

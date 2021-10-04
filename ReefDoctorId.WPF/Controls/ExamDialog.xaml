@@ -41,8 +41,8 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 Command="{Binding CloseExamDialogCommand}"
-                IsHitTestVisible="{Binding IsInfoVisible}"
-                IsTabStop="{Binding IsInfoVisible}"
+                IsHitTestVisible="{Binding IsExamDialogOpen}"
+                IsTabStop="{Binding IsExamDialogOpen}"
                 Style="{DynamicResource DialogCloseButton}">
                 <Viewbox Height="11" Stretch="Uniform">
                     <Path
