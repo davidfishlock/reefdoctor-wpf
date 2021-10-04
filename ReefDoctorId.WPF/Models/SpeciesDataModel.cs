@@ -192,7 +192,7 @@ namespace ReefDoctorId.WPF.Models
                     name = "Nudibranch";
                 }
 
-                var existingItem = NAItems.Where(item => item.Name == name).FirstOrDefault();
+                var existingItem = NAItems.FirstOrDefault(item => item.Name == name);
 
                 if (existingItem != null)
                 {
@@ -213,14 +213,7 @@ namespace ReefDoctorId.WPF.Models
                 }
             }
 
-            if (numberItems != 0)
-            {
-                return NAItems.Take(numberItems).ToList();
-            }
-            else
-            {
-                return NAItems;
-            }
+            return numberItems > 0 ? NAItems.Take(numberItems).ToList() : NAItems;
         }
 
         private List<Subject> LoadSpeciesData(SpeciesType speciesType)
