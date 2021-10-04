@@ -357,7 +357,7 @@ namespace ReefDoctorId.ViewModels
 
                 if (IsExam)
                 {
-                    var appFolder = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).Parent;
+                    var appFolder = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
 
                     var examsFolder = appFolder.GetDirectories("Exams").First();
                     var typeFolder = examsFolder.GetDirectories(_launchContext.SpeciesType.ToString()).First();

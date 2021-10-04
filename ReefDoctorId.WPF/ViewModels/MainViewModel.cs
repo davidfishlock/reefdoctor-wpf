@@ -201,7 +201,7 @@ namespace ReefDoctorId.ViewModels
 
         private void CheckExams()
         {
-            var appFolder = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).Parent;
+            var appFolder = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
             var examsFolder = appFolder.GetDirectories("Exams");
 
             IsExamsEnabled = examsFolder.Count() > 0;
@@ -364,7 +364,7 @@ namespace ReefDoctorId.ViewModels
         private void ShowExamSelect()
         {
             // Check How Many Exams
-            var appFolder = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).Parent;
+            var appFolder = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
             var examsFolder = appFolder.GetDirectories("Exams").First();
             var typeFolder = examsFolder.GetDirectories(_launchContext.SpeciesType.ToString()).First();
 
