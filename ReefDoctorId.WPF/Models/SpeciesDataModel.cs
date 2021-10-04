@@ -21,7 +21,7 @@ namespace ReefDoctorId.WPF.Models
 
         private void LoadCodeStrings()
         {
-            var appFolder = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).Parent;
+            var appFolder = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
 
             var dataFolder = appFolder.GetDirectories("Species Data").First();
             var benthicFolder = dataFolder.GetDirectories("Benthic").First();
@@ -225,7 +225,7 @@ namespace ReefDoctorId.WPF.Models
 
         private List<Subject> LoadSpeciesData(SpeciesType speciesType)
         {
-            var appFolder = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).Parent;
+            var appFolder = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
             List<Subject> items = new List<Subject>();
 
             var dataFolder = appFolder.GetDirectories("Species Data").First();

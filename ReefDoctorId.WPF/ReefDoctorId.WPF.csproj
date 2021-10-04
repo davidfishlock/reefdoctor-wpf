@@ -315,6 +315,16 @@
   <ItemGroup>
     <Resource Include="Assets\Backgrounds\Seagrass.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Species Data\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Exams\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <ItemGroup>
