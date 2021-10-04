@@ -1,0 +1,737 @@
+﻿<UserControl
+    x:Class="ReefDoctorId.WPF.Controls.MainMenu"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="ControlRoot"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+
+    <Grid x:Name="RootGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Image
+            Width="300"
+            Margin="24,45,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Source="/Assets/Logo_White.png" />
+
+        <ScrollViewer
+            Grid.Row="1"
+            Margin="0,18,6,0"
+            PanningMode="VerticalFirst"
+            Style="{StaticResource MetroScrollViewer}"
+            VerticalScrollBarVisibility="Auto">
+            <Grid Margin="0,0,0,0">
+                <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
+                    <Grid Style="{StaticResource MainPagePanel}">
+                        <WrapPanel
+                            Margin="12,12,0,24"
+                            ItemWidth="{Binding ActualWidth, RelativeSource={RelativeSource Self}, Converter={StaticResource FlexWrapPanel}}"
+                            Orientation="Horizontal">
+
+                            <Grid
+                                x:Name="FishPanel"
+                                Margin="0,0,12,12"
+                                Background="{StaticResource MainPanelBg}"
+                                CacheMode="BitmapCache"
+                                Opacity="0"
+                                RenderTransformOrigin="0.5,0.5">
+                                <Grid.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform
+                                            x:Name="FishScale"
+                                            ScaleX="0.98"
+                                            ScaleY="0.98" />
+                                        <TranslateTransform x:Name="FishTranslate" Y="12" />
+                                    </TransformGroup>
+                                </Grid.RenderTransform>
+                                <Border Height="194" HorizontalAlignment="Stretch">
+                                    <Image
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Source="/Assets/Backgrounds/BluestreakCleanerWrasse.jpg"
+                                        Stretch="UniformToFill" />
+                                </Border>
+
+                                <Grid VerticalAlignment="Bottom" Background="{StaticResource MainPanelBg}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock
+                                        Margin="6"
+                                        VerticalAlignment="Center"
+                                        FontSize="18"
+                                        Foreground="White"
+                                        Text="Fish" />
+
+                                    <StackPanel
+                                        Margin="6,6,6,6"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="Fish-Workshop"
+                                            Content="Workshop"
+                                            Style="{StaticResource LauncherButton}" />
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="Fish-Quiz"
+                                            Content="Quiz"
+                                            Style="{StaticResource LauncherButton}" />
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="Fish-Exam"
+                                            Content="Exam"
+                                            Style="{StaticResource LauncherButton}"
+                                            Visibility="{Binding IsExamsEnabled, Converter={StaticResource BooleanToVisibility}}" />
+                                    </StackPanel>
+
+                                </Grid>
+                            </Grid>
+
+                            <Grid
+                                x:Name="InvertPanel"
+                                Margin="0,0,12,12"
+                                Background="{StaticResource MainPanelBg}"
+                                CacheMode="BitmapCache"
+                                Opacity="0"
+                                RenderTransformOrigin="0.5,0.5">
+                                <Grid.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform
+                                            x:Name="InvertScale"
+                                            ScaleX="0.98"
+                                            ScaleY="0.98" />
+                                        <TranslateTransform x:Name="InvertTranslate" Y="12" />
+                                    </TransformGroup>
+                                </Grid.RenderTransform>
+                                <Border Height="196" HorizontalAlignment="Stretch">
+                                    <Image
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Bottom"
+                                        Source="/Assets/Backgrounds/MantisShrimp.jpg"
+                                        Stretch="UniformToFill" />
+                                </Border>
+
+                                <Grid VerticalAlignment="Bottom" Background="{StaticResource MainPanelBg}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock
+                                        Margin="6"
+                                        VerticalAlignment="Center"
+                                        FontSize="18"
+                                        Foreground="White"
+                                        Text="Invertebrate" />
+
+                                    <StackPanel
+                                        Margin="6,6,6,6"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="Invert-Workshop"
+                                            Content="Workshop"
+                                            Style="{StaticResource LauncherButton}" />
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="Invert-Quiz"
+                                            Content="Quiz"
+                                            Style="{StaticResource LauncherButton}" />
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="Invert-Exam"
+                                            Content="Exam"
+                                            Style="{StaticResource LauncherButton}"
+                                            Visibility="{Binding IsExamsEnabled, Converter={StaticResource BooleanToVisibility}}" />
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+
+                            <Grid
+                                x:Name="BenthicPanel"
+                                Margin="0,0,12,12"
+                                Background="{StaticResource MainPanelBg}"
+                                CacheMode="BitmapCache"
+                                Opacity="0"
+                                RenderTransformOrigin="0.5,0.5">
+                                <Grid.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform
+                                            x:Name="BenthicScale"
+                                            ScaleX="0.98"
+                                            ScaleY="0.98" />
+                                        <TranslateTransform x:Name="BenthicTranslate" Y="12" />
+                                    </TransformGroup>
+                                </Grid.RenderTransform>
+                                <Border Height="196" HorizontalAlignment="Stretch">
+                                    <Image
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Source="/Assets/Backgrounds/CMA.jpg"
+                                        Stretch="UniformToFill" />
+                                </Border>
+
+                                <Grid VerticalAlignment="Bottom" Background="{StaticResource MainPanelBg}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock
+                                        Margin="6"
+                                        VerticalAlignment="Center"
+                                        FontSize="18"
+                                        Foreground="White"
+                                        Text="Benthic" />
+
+                                    <StackPanel
+                                        Margin="6,6,6,6"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="Benthic-Workshop"
+                                            Content="Workshop"
+                                            Style="{StaticResource LauncherButton}" />
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="Benthic-Quiz"
+                                            Content="Quiz"
+                                            Style="{StaticResource LauncherButton}" />
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="Benthic-Exam"
+                                            Content="Exam"
+                                            Style="{StaticResource LauncherButton}"
+                                            Visibility="{Binding IsExamsEnabled, Converter={StaticResource BooleanToVisibility}}" />
+                                    </StackPanel>
+
+                                </Grid>
+                            </Grid>
+
+                            <Grid
+                                x:Name="FishFamilyPanel"
+                                Margin="0,0,12,12"
+                                Background="{StaticResource MainPanelBg}"
+                                CacheMode="BitmapCache"
+                                Opacity="0"
+                                RenderTransformOrigin="0.5,0.5">
+                                <Grid.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform
+                                            x:Name="FishFamilyScale"
+                                            ScaleX="0.98"
+                                            ScaleY="0.98" />
+                                        <TranslateTransform x:Name="FishFamilyTranslate" Y="12" />
+                                    </TransformGroup>
+                                </Grid.RenderTransform>
+                                <Border Height="196" HorizontalAlignment="Stretch">
+                                    <Image
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Source="/Assets/Backgrounds/Dartfish.jpg"
+                                        Stretch="UniformToFill" />
+                                </Border>
+
+                                <Grid VerticalAlignment="Bottom" Background="{StaticResource MainPanelBg}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock
+                                        Margin="6"
+                                        VerticalAlignment="Center"
+                                        FontSize="18"
+                                        Foreground="White"
+                                        Text="Fish Families" />
+
+                                    <StackPanel
+                                        Margin="6,6,6,6"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="FishFamily-Workshop"
+                                            Content="Workshop"
+                                            Style="{StaticResource LauncherButton}" />
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="FishFamily-Quiz"
+                                            Content="Quiz"
+                                            Style="{StaticResource LauncherButton}" />
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="FishFamily-Exam"
+                                            Content="Exam"
+                                            Style="{StaticResource LauncherButton}"
+                                            Visibility="{Binding IsExamsEnabled, Converter={StaticResource BooleanToVisibility}}" />
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+
+                            <Grid
+                                x:Name="CoralPanel"
+                                Margin="0,0,12,12"
+                                Background="{StaticResource MainPanelBg}"
+                                CacheMode="BitmapCache"
+                                Opacity="0"
+                                RenderTransformOrigin="0.5,0.5">
+                                <Grid.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform
+                                            x:Name="CoralScale"
+                                            ScaleX="0.98"
+                                            ScaleY="0.98" />
+                                        <TranslateTransform x:Name="CoralTranslate" Y="12" />
+                                    </TransformGroup>
+                                </Grid.RenderTransform>
+                                <Border Height="196" HorizontalAlignment="Stretch">
+                                    <Image
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Source="/Assets/Backgrounds/Pocillopora.jpg"
+                                        Stretch="UniformToFill" />
+                                </Border>
+
+                                <Grid VerticalAlignment="Bottom" Background="{StaticResource MainPanelBg}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock
+                                        Margin="6"
+                                        VerticalAlignment="Center"
+                                        FontSize="18"
+                                        Foreground="White"
+                                        Text="Coral" />
+
+                                    <StackPanel
+                                        Margin="6,6,6,6"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="Coral-Workshop"
+                                            Content="Workshop"
+                                            Style="{StaticResource LauncherButton}" />
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="Coral-Quiz"
+                                            Content="Quiz"
+                                            Style="{StaticResource LauncherButton}" />
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="Coral-Exam"
+                                            Content="Exam"
+                                            Style="{StaticResource LauncherButton}"
+                                            Visibility="{Binding IsExamsEnabled, Converter={StaticResource BooleanToVisibility}}" />
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+
+                            <Grid
+                                x:Name="SeagrassPanel"
+                                Margin="0,0,12,12"
+                                Background="{StaticResource MainPanelBg}"
+                                CacheMode="BitmapCache"
+                                Opacity="0"
+                                RenderTransformOrigin="0.5,0.5">
+                                <Grid.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform
+                                            x:Name="SeagrassScale"
+                                            ScaleX="0.98"
+                                            ScaleY="0.98" />
+                                        <TranslateTransform x:Name="SeagrassTranslate" Y="12" />
+                                    </TransformGroup>
+                                </Grid.RenderTransform>
+                                <Border Height="196" HorizontalAlignment="Stretch">
+                                    <Image
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Source="/Assets/Backgrounds/Seagrass.jpg"
+                                        Stretch="UniformToFill" />
+                                </Border>
+
+                                <Grid VerticalAlignment="Bottom" Background="{StaticResource MainPanelBg}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock
+                                        Margin="6"
+                                        VerticalAlignment="Center"
+                                        FontSize="18"
+                                        Foreground="White"
+                                        Text="Seagrass" />
+
+                                    <StackPanel
+                                        Margin="6,6,6,6"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="Seagrass-Workshop"
+                                            Content="Workshop"
+                                            Style="{StaticResource LauncherButton}" />
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="Seagrass-Quiz"
+                                            Content="Quiz"
+                                            Style="{StaticResource LauncherButton}" />
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="Seagrass-Exam"
+                                            Content="Exam"
+                                            Style="{StaticResource LauncherButton}"
+                                            Visibility="{Binding IsExamsEnabled, Converter={StaticResource BooleanToVisibility}}" />
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+
+                            <Grid
+                                x:Name="JuvenileFishPanel"
+                                Margin="0,0,12,12"
+                                Background="{StaticResource MainPanelBg}"
+                                CacheMode="BitmapCache"
+                                Opacity="0"
+                                RenderTransformOrigin="0.5,0.5">
+                                <Grid.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform
+                                            x:Name="JuvenileFishScale"
+                                            ScaleX="0.98"
+                                            ScaleY="0.98" />
+                                        <TranslateTransform x:Name="JuvenileFishTranslate" Y="12" />
+                                    </TransformGroup>
+                                </Grid.RenderTransform>
+                                <Border Height="196" HorizontalAlignment="Stretch">
+                                    <Image
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Bottom"
+                                        Source="/Assets/Backgrounds/BicolorParrotfish.jpg"
+                                        Stretch="UniformToFill" />
+                                </Border>
+
+                                <Grid VerticalAlignment="Bottom" Background="{StaticResource MainPanelBg}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock
+                                        Margin="6"
+                                        VerticalAlignment="Center"
+                                        FontSize="18"
+                                        Foreground="White"
+                                        Text="Juvenile Fish" />
+
+                                    <StackPanel
+                                        Margin="6,6,6,6"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="JuvenileFish-Workshop"
+                                            Content="Workshop"
+                                            Style="{StaticResource LauncherButton}" />
+                                        <Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="JuvenileFish-Quiz"
+                                            Content="Quiz"
+                                            Style="{StaticResource LauncherButton}" />
+                                        <!--<Button
+                                            Command="{Binding StartWorkshopCommand}"
+                                            CommandParameter="JuvenileFish-Exam"
+                                            Content="Exam"
+                                            Style="{StaticResource LauncherButton}"
+                                            Visibility="{Binding IsExamsEnabled, Converter={StaticResource BooleanToVisibility}}" />-->
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+
+                            <Grid
+                                x:Name="SpeciesBrowserPanel"
+                                Margin="0,0,12,12"
+                                Background="{StaticResource MainPanelBg}"
+                                CacheMode="BitmapCache"
+                                Opacity="0"
+                                RenderTransformOrigin="0.5,0.5">
+                                <Grid.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform
+                                            x:Name="SpeciesBrowserScale"
+                                            ScaleX="0.98"
+                                            ScaleY="0.98" />
+                                        <TranslateTransform x:Name="SpeciesBrowserTranslate" Y="12" />
+                                    </TransformGroup>
+                                </Grid.RenderTransform>
+                                <Border Height="196" HorizontalAlignment="Stretch">
+                                    <Image
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        Source="/Assets/Backgrounds/Catalog.png" />
+                                </Border>
+                                <Grid VerticalAlignment="Bottom" Background="{StaticResource MainPanelBg}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock
+                                        Margin="6"
+                                        VerticalAlignment="Center"
+                                        FontSize="18"
+                                        Foreground="White"
+                                        Text="Species Catalog" />
+
+                                    <StackPanel
+                                        Margin="6,6,6,6"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            Background="{StaticResource ReefDoctorGreenPrimary}"
+                                            Command="{Binding ShowSpeciesBrowserCommand}"
+                                            Content="View Species"
+                                            Style="{StaticResource LauncherButton}" />
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                        </WrapPanel>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup Name="IntroStates">
+                <VisualState Name="Intro">
+                    <Storyboard>
+                        <DoubleAnimation
+                            BeginTime="0:0:0"
+                            Storyboard.TargetName="FishPanel"
+                            Storyboard.TargetProperty="(UIElement.Opacity)"
+                            From="0"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0"
+                            Storyboard.TargetName="FishScale"
+                            Storyboard.TargetProperty="ScaleX"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0"
+                            Storyboard.TargetName="FishScale"
+                            Storyboard.TargetProperty="ScaleY"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0"
+                            Storyboard.TargetName="FishTranslate"
+                            Storyboard.TargetProperty="Y"
+                            To="0"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.05"
+                            Storyboard.TargetName="InvertPanel"
+                            Storyboard.TargetProperty="(UIElement.Opacity)"
+                            From="0"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.05"
+                            Storyboard.TargetName="InvertScale"
+                            Storyboard.TargetProperty="ScaleX"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.05"
+                            Storyboard.TargetName="InvertScale"
+                            Storyboard.TargetProperty="ScaleY"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.05"
+                            Storyboard.TargetName="InvertTranslate"
+                            Storyboard.TargetProperty="Y"
+                            To="0"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.1"
+                            Storyboard.TargetName="BenthicPanel"
+                            Storyboard.TargetProperty="(UIElement.Opacity)"
+                            From="0"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.1"
+                            Storyboard.TargetName="BenthicScale"
+                            Storyboard.TargetProperty="ScaleX"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.1"
+                            Storyboard.TargetName="BenthicScale"
+                            Storyboard.TargetProperty="ScaleY"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.1"
+                            Storyboard.TargetName="BenthicTranslate"
+                            Storyboard.TargetProperty="Y"
+                            To="0"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.15"
+                            Storyboard.TargetName="FishFamilyPanel"
+                            Storyboard.TargetProperty="(UIElement.Opacity)"
+                            From="0"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.15"
+                            Storyboard.TargetName="FishFamilyScale"
+                            Storyboard.TargetProperty="ScaleX"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.15"
+                            Storyboard.TargetName="FishFamilyScale"
+                            Storyboard.TargetProperty="ScaleY"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.15"
+                            Storyboard.TargetName="FishFamilyTranslate"
+                            Storyboard.TargetProperty="Y"
+                            To="0"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.2"
+                            Storyboard.TargetName="CoralPanel"
+                            Storyboard.TargetProperty="(UIElement.Opacity)"
+                            From="0"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.2"
+                            Storyboard.TargetName="CoralScale"
+                            Storyboard.TargetProperty="ScaleX"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.2"
+                            Storyboard.TargetName="CoralScale"
+                            Storyboard.TargetProperty="ScaleY"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.2"
+                            Storyboard.TargetName="CoralTranslate"
+                            Storyboard.TargetProperty="Y"
+                            To="0"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.25"
+                            Storyboard.TargetName="SeagrassPanel"
+                            Storyboard.TargetProperty="(UIElement.Opacity)"
+                            From="0"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.25"
+                            Storyboard.TargetName="SeagrassScale"
+                            Storyboard.TargetProperty="ScaleX"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.25"
+                            Storyboard.TargetName="SeagrassScale"
+                            Storyboard.TargetProperty="ScaleY"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.25"
+                            Storyboard.TargetName="SeagrassTranslate"
+                            Storyboard.TargetProperty="Y"
+                            To="0"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.3"
+                            Storyboard.TargetName="JuvenileFishPanel"
+                            Storyboard.TargetProperty="(UIElement.Opacity)"
+                            From="0"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.3"
+                            Storyboard.TargetName="JuvenileFishScale"
+                            Storyboard.TargetProperty="ScaleX"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.3"
+                            Storyboard.TargetName="JuvenileFishScale"
+                            Storyboard.TargetProperty="ScaleY"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.3"
+                            Storyboard.TargetName="JuvenileFishTranslate"
+                            Storyboard.TargetProperty="Y"
+                            To="0"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.35"
+                            Storyboard.TargetName="SpeciesBrowserPanel"
+                            Storyboard.TargetProperty="(UIElement.Opacity)"
+                            From="0"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.35"
+                            Storyboard.TargetName="SpeciesBrowserScale"
+                            Storyboard.TargetProperty="ScaleX"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.35"
+                            Storyboard.TargetName="SpeciesBrowserScale"
+                            Storyboard.TargetProperty="ScaleY"
+                            To="1"
+                            Duration="0:0:0.3" />
+                        <DoubleAnimation
+                            BeginTime="0:0:0.35"
+                            Storyboard.TargetName="SpeciesBrowserTranslate"
+                            Storyboard.TargetProperty="Y"
+                            To="0"
+                            Duration="0:0:0.3" />
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
+</UserControl>

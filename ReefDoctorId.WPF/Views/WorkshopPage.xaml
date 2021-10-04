@@ -1,0 +1,358 @@
+﻿<local:BasePage
+    x:Class="ReefDoctorId.WPF.Views.WorkshopPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:FlipViewControl;assembly=FlipViewControl"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hammer="clr-namespace:Hammer.SpinningWheel;assembly=Hammer.SpinningWheel"
+    xmlns:interactCore="http://schemas.microsoft.com/expression/2010/interactions"
+    xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:local="clr-namespace:ReefDoctorId.WPF.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:usercontrols="clr-namespace:ReefDoctorId.WPF.Controls"
+    x:Name="PageRoot"
+    Title="WorkshopPage"
+    DataContext="{Binding WorkshopViewModel, Source={StaticResource Locator}}"
+    Focusable="True"
+    Loaded="BasePage_Loaded"
+    Unloaded="BasePage_Unloaded"
+    mc:Ignorable="d">
+
+    <Grid Background="White">
+        <Grid Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibility}, ConverterParameter='invert'}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <usercontrols:TitleBar
+                VerticalAlignment="Top"
+                Background="{StaticResource SecondaryTitleBarBackground}"
+                Foreground="{StaticResource SecondaryTitleBarForeground}" />
+
+            <!--  Header  -->
+            <Grid Grid.Row="1" VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Command="{Binding GoBackCommand}">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <ContentPresenter />
+                        </ControlTemplate>
+                    </Button.Template>
+                    <Button.Content>
+                        <Image
+                            Width="300"
+                            Margin="24,24,0,12"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Source="/Assets/Logo_Color.png" />
+                    </Button.Content>
+                </Button>
+
+                <!--  Controls  -->
+                <Grid
+                    Grid.Column="2"
+                    Margin="0,12,24,12"
+                    VerticalAlignment="Center"
+                    Background="#80FFFFFF"
+                    Visibility="{Binding IsCompleted, Converter={StaticResource BooleanToVisibility}, ConverterParameter='invert'}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox
+                        Grid.Column="1"
+                        Width="160"
+                        Height="42"
+                        Margin="0,0,0,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        ItemsSource="{Binding SpeciesItems}"
+                        SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                        Style="{DynamicResource Jumplist}"
+                        Template="{StaticResource WrappingComboBoxTemplate}">
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="ComboBoxItem">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ComboBoxItem">
+                                            <Grid Background="Transparent">
+                                                <Border x:Name="border" Background="Transparent">
+                                                    <TextBlock
+                                                        x:Name="text"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        FontSize="18"
+                                                        FontWeight="SemiBold"
+                                                        Text="{Binding Converter={StaticResource AnswersItemName}, ConverterParameter='JumpList'}" />
+                                                </Border>
+                                            </Grid>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="true">
+                                                    <Setter TargetName="border" Property="Background" Value="{StaticResource ReefDoctorBlue}" />
+                                                    <Setter TargetName="border" Property="Opacity" Value="0.7" />
+                                                    <Setter TargetName="text" Property="Foreground" Value="White" />
+                                                </Trigger>
+                                                <Trigger Property="IsSelected" Value="true">
+                                                    <Setter TargetName="border" Property="Background" Value="{StaticResource ReefDoctorBlue}" />
+                                                    <Setter TargetName="border" Property="Opacity" Value="1" />
+                                                    <Setter TargetName="text" Property="Foreground" Value="White" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel />
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>
+                    </ComboBox>
+
+                    <TextBlock
+                        Grid.Column="1"
+                        Margin="24,0,24,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        FontSize="20"
+                        FontWeight="SemiBold"
+                        Foreground="White"
+                        IsHitTestVisible="False"
+                        Style="{StaticResource PageTitle}">
+                        <Run Text="{Binding SelectedItem.Index}" />
+                        <Run Text="/" />
+                        <Run Text="{Binding SpeciesItems.Count, Converter={StaticResource TotalNumber}, Mode=OneWay}" />
+                    </TextBlock>
+
+                    <StackPanel
+                        Grid.Column="0"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal"
+                        Visibility="{Binding IsWorkshop, Converter={StaticResource BooleanToVisibility}}">
+                        <ToggleButton
+                            Margin="0,0,12,0"
+                            IsChecked="{Binding SelectedItem.IsNameVisible, Mode=TwoWay}"
+                            Style="{StaticResource CircleToggleButton}">
+                            <ToggleButton.Content>
+                                <Viewbox
+                                    Height="16"
+                                    Margin="0"
+                                    Stretch="Uniform">
+                                    <Path
+                                        Canvas.Left="25.3333"
+                                        Canvas.Top="17.4167"
+                                        Width="25.3333"
+                                        Height="39.5833"
+                                        Data="F1 M 37.2083,49.0833C 39.3945,49.0833 41.1667,50.8555 41.1667,53.0417C 41.1667,55.2278 39.3945,57 37.2083,57C 35.0222,57 33.25,55.2278 33.25,53.0417C 33.25,50.8555 35.0222,49.0833 37.2083,49.0833 Z M 38,17.4167C 44.9956,17.4167 50.6666,21.9416 50.6666,28.5C 50.6666,30.875 49.0833,34.8333 45.9167,36.4167C 42.75,38 41.1667,40.1267 41.1667,42.75L 41.1667,45.9167L 33.25,45.9167L 33.25,43.5417C 33.25,38.1571 38,34.8333 39.5833,33.25C 42.75,30.0833 42.75,29.644 42.75,28.5C 42.75,25.8767 40.6233,23.75 38,23.75C 35.3766,23.75 33.25,25.8767 33.25,28.5L 33.25,30.875L 25.3333,30.875L 25.3333,29.2917C 25.3333,22.7333 31.0044,17.4167 38,17.4167 Z "
+                                        Fill="#FFFFFF"
+                                        Stretch="Fill" />
+                                </Viewbox>
+                            </ToggleButton.Content>
+                        </ToggleButton>
+                        <Button
+                            Margin="0,0,12,0"
+                            Command="{Binding ShowInfoCommand}"
+                            Style="{StaticResource CircleButton}">
+                            <Button.Content>
+                                <Viewbox
+                                    Height="16"
+                                    Margin="0"
+                                    Stretch="Uniform">
+                                    <Path
+                                        Width="14.2499"
+                                        Height="38.0001"
+                                        Data="F1 M 31.6666,30.0834L 42.7499,30.0834L 42.7499,33.2501L 42.7499,52.2501L 45.9165,52.2501L 45.9165,57.0001L 31.6666,57.0001L 31.6666,52.2501L 34.8332,52.2501L 34.8332,34.8335L 31.6666,34.8335L 31.6666,30.0834 Z M 38.7917,19C 40.9778,19 42.75,20.7722 42.75,22.9583C 42.75,25.1445 40.9778,26.9167 38.7917,26.9167C 36.6055,26.9167 34.8333,25.1445 34.8333,22.9583C 34.8333,20.7722 36.6055,19 38.7917,19 Z "
+                                        Fill="#FFF"
+                                        Stretch="Fill" />
+                                </Viewbox>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+
+            <!--  Main Flipview  -->
+            <controls:FlipView
+                x:Name="ItemsFlipper"
+                Grid.Row="2"
+                Margin="0,12,0,24"
+                Background="White"
+                Focusable="False"
+                IsTabStop="False"
+                ItemsSource="{Binding SpeciesItems}"
+                SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
+                SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                SelectionChanged="ItemsFlipper_SelectionChanged"
+                Style="{DynamicResource FlipViewStyle}"
+                TapCommand="{Binding ToggleImageCommand}"
+                TapCommandParameter="{Binding SelectedItem.ImagePath}"
+                Visibility="{Binding IsCompleted, Converter={StaticResource BooleanToVisibility}, ConverterParameter='invert'}">
+                <controls:FlipView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <interactivity:Interaction.Triggers>
+                                <interactCore:PropertyChangedTrigger Binding="{Binding IsNameVisible}">
+                                    <interactCore:GoToStateAction StateName="{Binding IsNameVisible}" />
+                                </interactCore:PropertyChangedTrigger>
+                            </interactivity:Interaction.Triggers>
+                            <Image x:Name="SpeciesImage" Source="{Binding ImagePath}" />
+                            <!--  Species Name  -->
+                            <Border
+                                x:Name="NameOverlay"
+                                Width="{Binding ActualWidth, ElementName=SpeciesImage}"
+                                Height="{Binding ActualHeight, ElementName=SpeciesImage}"
+                                Background="#99000000"
+                                CacheMode="BitmapCache"
+                                Opacity="0">
+
+                                <Grid
+                                    x:Name="NameText"
+                                    MaxWidth="{Binding ActualWidth, ElementName=SpeciesImage}"
+                                    Margin="0,0,0,24"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Opacity="0">
+
+                                    <Grid
+                                        Margin="24,0,24,0"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Bottom">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border
+                                            Margin="0,3,12,0"
+                                            VerticalAlignment="Top"
+                                            Background="Red"
+                                            CornerRadius="6"
+                                            Visibility="{Binding IsNA, Converter={StaticResource BooleanToVisibility}}">
+                                            <TextBlock
+                                                Margin="6,6,6,6"
+                                                FontSize="18"
+                                                FontWeight="SemiBold"
+                                                Foreground="White"
+                                                Text="N/A" />
+                                        </Border>
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            FontSize="30"
+                                            Foreground="White"
+                                            Text="{Binding Name}"
+                                            TextAlignment="Left"
+                                            TextWrapping="Wrap" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="NameVisibility">
+                                    <VisualState Name="True">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="NameOverlay"
+                                                Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                To="1"
+                                                Duration="0:0:0.1">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <ExponentialEase EasingMode="EaseIn" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation
+                                                BeginTime="0:0:0.1"
+                                                Storyboard.TargetName="NameText"
+                                                Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                To="1"
+                                                Duration="0:0:0.1">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <ExponentialEase EasingMode="EaseIn" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState Name="False">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="NameOverlay"
+                                                Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                To="0"
+                                                Duration="0:0:0.1">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <ExponentialEase EasingMode="EaseOut" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Grid>
+                    </DataTemplate>
+                </controls:FlipView.ItemTemplate>
+            </controls:FlipView>
+
+            <!--  Completion Screen  -->
+            <usercontrols:Answers Grid.Row="2" IsHitTestVisible="{Binding IsCompleted}" />
+
+            <!--  Image Overlay  -->
+            <usercontrols:ImageOverlay
+                x:Name="ImageOverlay"
+                Grid.Row="0"
+                Grid.RowSpan="4"
+                CloseCommand="{Binding HideImageCommand}"
+                Grid.ZIndex="10"
+                IsHitTestVisible="{Binding IsFullScreenVisible}"
+                IsOpen="{Binding IsFullScreenVisible}"
+                ItemsSource="{Binding SelectedItem.Images}" />
+
+            <!--  Info Dialog  -->
+            <usercontrols:InfoDialog
+                Grid.Row="0"
+                Grid.RowSpan="4"
+                CloseCommand="{Binding HideInfoCommand}"
+                IsHitTestVisible="{Binding IsInfoVisible}"
+                IsOpen="{Binding IsInfoVisible}" />
+        </Grid>
+
+        <!--  Progress  -->
+        <Grid Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibility}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <usercontrols:TitleBar
+                VerticalAlignment="Top"
+                Background="{StaticResource SecondaryTitleBarBackground}"
+                Foreground="{StaticResource SecondaryTitleBarForeground}" />
+
+            <Image
+                Grid.Row="1"
+                Width="300"
+                Margin="24,24,0,12"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Source="/Assets/Logo_Color.png" />
+
+            <hammer:SpinningWheel
+                Grid.Row="1"
+                Width="48"
+                Height="48"
+                CircleColor="{StaticResource ReefDoctorBlueColor}"
+                IsSpinning="{Binding IsLoading}"
+                Radius="24"
+                Speed="1.5"
+                Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibility}}" />
+        </Grid>
+    </Grid>
+</local:BasePage>

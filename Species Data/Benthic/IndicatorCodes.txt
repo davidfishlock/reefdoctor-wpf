@@ -1,0 +1,13 @@
+Algae - AG
+Ascidian - AS
+Dead Coral - DC
+Hard Coral - HC
+Hard Coral (Bleached) - HCB
+Other - OT
+Rubble - RB
+Rock - RC
+Soft Coral - SC
+Sand - SD
+Silt - SI
+Sponge - SP
+Zooanthids & Corallimorphs - ZC

@@ -1,0 +1,38 @@
+Acropora Branching - ACB
+Acropora Digitate - ACD
+Acropora Encrusting - ACE
+Acropora Laminar - ACL
+Acropora Submassive - ACS
+Acropora Tabulate - ACT
+Fleshy Macroalgae - AFM
+Ascidian - AS
+Turf Algae - AT
+Coral Branching - CB
+Coral Encrusting - CE
+Coral Foliacious - CF
+Coral Massive - CMA
+Coral Mushroom - CMU
+Coral Submassive - CS
+Halimeda - HA
+Heliopora - HE
+Millepora - MI
+Other (Anemone) - OA
+Other (Bryozoan) - OB
+Other (Clam) - OC
+Other (Gorgonian) - OG
+Other (Hydroid) - OH
+Other (Tubeworm) - OT
+Other (Tubastrea) - OTU
+Rubble (with Coralline Algae) - RBC
+Rubble (no Coralline Algae) - RBN
+Rock (with Coralline Algae) - RCC
+Rock (no Coralline Algae) - RCN
+Sargassum - SA
+Soft Coral - SC
+Sand - SD
+Seagrass - SG
+Silt - SI
+Sponge - SP
+Tubipora - TUB
+Turbinaria - TUR
+Zooanthids & Corallimorphs - ZC

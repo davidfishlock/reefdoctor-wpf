@@ -1,0 +1,2 @@
+Silt is sediment that remains in suspension if disturbed. Often, silt is present on top of other indicators such as rock. In these instances, silt is recorded if the silt layer is thicker than 1mm or covers the underlying substratum such that you cannot observe the colour.
+If the colour of the underlying substrate can be discerned, then the code recorded will be that of the underlying substrate NOT silt.
