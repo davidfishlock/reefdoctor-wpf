@@ -11,10 +11,7 @@
     MinWidth="600"
     MinHeight="450"
     Icon="/Assets/ReefDoctor.ico"
-    ResizeMode="NoResize"
     ShowsNavigationUI="False"
     Source="Views/MainPage.xaml"
     WindowStartupLocation="CenterScreen"
-    WindowState="Maximized"
-    WindowStyle="None"
     mc:Ignorable="d" />

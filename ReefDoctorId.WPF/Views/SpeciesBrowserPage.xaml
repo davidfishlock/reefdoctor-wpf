@@ -12,12 +12,19 @@
     Focusable="True"
     mc:Ignorable="d">
     <local:BasePage.Resources>
-        <Style x:Key="FilterItem" TargetType="ComboBoxItem">
-            <Setter Property="Template">
+        <Style
+            x:Key="FilterItem"
+            TargetType="ComboBoxItem">
+            <Setter
+                Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="ComboBoxItem">
-                        <Grid Background="Transparent">
-                            <Border x:Name="border" Background="Transparent">
+                    <ControlTemplate
+                        TargetType="ComboBoxItem">
+                        <Grid
+                            Background="Transparent">
+                            <Border
+                                x:Name="border"
+                                Background="Transparent">
                                 <TextBlock
                                     x:Name="text"
                                     Margin="12,6,6,6"
@@ -28,15 +35,37 @@
                             </Border>
                         </Grid>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="true">
-                                <Setter TargetName="border" Property="Background" Value="{StaticResource ReefDoctorBlue}" />
-                                <Setter TargetName="border" Property="Opacity" Value="0.7" />
-                                <Setter TargetName="text" Property="Foreground" Value="White" />
+                            <Trigger
+                                Property="IsMouseOver"
+                                Value="true">
+                                <Setter
+                                    TargetName="border"
+                                    Property="Background"
+                                    Value="{StaticResource ReefDoctorBlue}" />
+                                <Setter
+                                    TargetName="border"
+                                    Property="Opacity"
+                                    Value="0.7" />
+                                <Setter
+                                    TargetName="text"
+                                    Property="Foreground"
+                                    Value="White" />
                             </Trigger>
-                            <Trigger Property="IsSelected" Value="true">
-                                <Setter TargetName="border" Property="Background" Value="{StaticResource ReefDoctorBlue}" />
-                                <Setter TargetName="border" Property="Opacity" Value="1" />
-                                <Setter TargetName="text" Property="Foreground" Value="White" />
+                            <Trigger
+                                Property="IsSelected"
+                                Value="true">
+                                <Setter
+                                    TargetName="border"
+                                    Property="Background"
+                                    Value="{StaticResource ReefDoctorBlue}" />
+                                <Setter
+                                    TargetName="border"
+                                    Property="Opacity"
+                                    Value="1" />
+                                <Setter
+                                    TargetName="text"
+                                    Property="Foreground"
+                                    Value="White" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -44,12 +73,19 @@
             </Setter>
         </Style>
 
-        <Style x:Key="SpeciesItem" TargetType="ListViewItem">
-            <Setter Property="Template">
+        <Style
+            x:Key="SpeciesItem"
+            TargetType="ListViewItem">
+            <Setter
+                Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="ListViewItem">
-                        <Grid Background="Transparent">
-                            <Border x:Name="border" Background="Transparent">
+                    <ControlTemplate
+                        TargetType="ListViewItem">
+                        <Grid
+                            Background="Transparent">
+                            <Border
+                                x:Name="border"
+                                Background="Transparent">
                                 <TextBlock
                                     x:Name="text"
                                     Margin="12,6,6,6"
@@ -60,15 +96,37 @@
                             </Border>
                         </Grid>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="true">
-                                <Setter TargetName="border" Property="Background" Value="{StaticResource ReefDoctorBlue}" />
-                                <Setter TargetName="border" Property="Opacity" Value="0.7" />
-                                <Setter TargetName="text" Property="Foreground" Value="White" />
+                            <Trigger
+                                Property="IsMouseOver"
+                                Value="true">
+                                <Setter
+                                    TargetName="border"
+                                    Property="Background"
+                                    Value="{StaticResource ReefDoctorBlue}" />
+                                <Setter
+                                    TargetName="border"
+                                    Property="Opacity"
+                                    Value="0.7" />
+                                <Setter
+                                    TargetName="text"
+                                    Property="Foreground"
+                                    Value="White" />
                             </Trigger>
-                            <Trigger Property="IsSelected" Value="true">
-                                <Setter TargetName="border" Property="Background" Value="{StaticResource ReefDoctorBlue}" />
-                                <Setter TargetName="border" Property="Opacity" Value="1" />
-                                <Setter TargetName="text" Property="Foreground" Value="White" />
+                            <Trigger
+                                Property="IsSelected"
+                                Value="true">
+                                <Setter
+                                    TargetName="border"
+                                    Property="Background"
+                                    Value="{StaticResource ReefDoctorBlue}" />
+                                <Setter
+                                    TargetName="border"
+                                    Property="Opacity"
+                                    Value="1" />
+                                <Setter
+                                    TargetName="text"
+                                    Property="Foreground"
+                                    Value="White" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -77,17 +135,27 @@
         </Style>
     </local:BasePage.Resources>
 
-    <Grid Background="White">
+    <Grid
+        Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition
+                Height="Auto" />
+            <RowDefinition
+                Height="Auto" />
+            <RowDefinition
+                Height="Auto" />
+            <RowDefinition
+                Height="Auto" />
+            <RowDefinition
+                Height="*" />
+            <RowDefinition
+                Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="324" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition
+                Width="324" />
+            <ColumnDefinition
+                Width="*" />
         </Grid.ColumnDefinitions>
 
         <usercontrols:TitleBar
@@ -102,7 +170,8 @@
             VerticalAlignment="Top"
             Command="{Binding GoBackCommand}">
             <Button.Template>
-                <ControlTemplate TargetType="Button">
+                <ControlTemplate
+                    TargetType="Button">
                     <ContentPresenter />
                 </ControlTemplate>
             </Button.Template>
@@ -170,6 +239,10 @@
             ItemsSource="{Binding CurrentFilter, IsAsync=True}"
             SelectedItem="{Binding SelectedItem, Mode=TwoWay}" />
 
+        <Button
+            Grid.Row="5"
+            Command="{Binding ExportCommand}">Export</Button>
+
         <ContentControl
             Grid.Row="1"
             Grid.RowSpan="4"
@@ -186,14 +259,19 @@
                         HorizontalScrollBarVisibility="Disabled"
                         PanningMode="VerticalFirst"
                         VerticalScrollBarVisibility="Auto">
-                        <Grid Background="Transparent">
+                        <Grid
+                            Background="Transparent">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
+                                <RowDefinition
+                                    Height="Auto" />
+                                <RowDefinition
+                                    Height="Auto" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <TextBlock
                                 Grid.ColumnSpan="2"
@@ -211,10 +289,13 @@
                                     Visibility="{Binding Info.Count, Converter={StaticResource CountToVisibility}, ConverterParameter=1}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Grid Margin="0,0,0,12">
+                                            <Grid
+                                                Margin="0,0,0,12">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition
+                                                        Width="Auto" />
+                                                    <ColumnDefinition
+                                                        Width="*" />
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock
                                                     Margin="24,-8,0,0"
@@ -248,11 +329,15 @@
                                         <DataTemplate>
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition
+                                                        Width="Auto" />
+                                                    <ColumnDefinition
+                                                        Width="*" />
                                                 </Grid.ColumnDefinitions>
 
-                                                <Border Width="200" Height="120">
+                                                <Border
+                                                    Width="200"
+                                                    Height="120">
                                                     <Image
                                                         Margin="24,0,0,12"
                                                         HorizontalAlignment="Center"
@@ -273,10 +358,14 @@
                                 </ItemsControl>
                             </StackPanel>
 
-                            <Grid Grid.Row="1" Grid.Column="1">
+                            <Grid
+                                Grid.Row="1"
+                                Grid.Column="1">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition
+                                        Height="Auto" />
+                                    <RowDefinition
+                                        Height="Auto" />
                                 </Grid.RowDefinitions>
 
                                 <Button
@@ -306,7 +395,9 @@
                                     ScrollViewer.VerticalScrollBarVisibility="Disabled">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
-                                            <WrapPanel ItemWidth="93" Orientation="Horizontal" />
+                                            <WrapPanel
+                                                ItemWidth="93"
+                                                Orientation="Horizontal" />
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>

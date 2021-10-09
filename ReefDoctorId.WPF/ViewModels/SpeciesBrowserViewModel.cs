@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using ReefDoctorId.Core.ViewModels;
 using GalaSoft.MvvmLight.Threading;
 using System.Threading;
+using System.Text;
+using System.IO;
+using System.Diagnostics;
 
 namespace ReefDoctorId.ViewModels
 {
@@ -328,6 +331,10 @@ namespace ReefDoctorId.ViewModels
             SelectedItem = CurrentFilter[0];
         }
 
+        private RelayCommand _exportCommand;
+        public RelayCommand ExportCommand => _exportCommand
+                    ?? (_exportCommand = new RelayCommand(Export));
+
         private RelayCommand<object> _showImageCommand;
         public RelayCommand<object> ShowImageCommand => _showImageCommand
                     ?? (_showImageCommand = new RelayCommand<object>(
@@ -365,5 +372,46 @@ namespace ReefDoctorId.ViewModels
                             IsFullScreenVisible = true;
                         });
                     }));
+
+        private void Export()
+        {
+            var csv = new StringBuilder();
+            var rowId = 1;
+
+            foreach (var species in _speciesDataModel.SpeciesData)
+            {
+                if (species.IsNA) continue;
+
+                var info = new StringBuilder();
+                var lineCount = 1;
+
+                if (species.Info != null)
+                {
+                    foreach (var line in species.Info)
+                    {
+                        if (lineCount > 1) info.Append("~");
+                        info.Append(line);
+                        lineCount++;
+                    }
+                }
+
+                var entry = string.Format("{0},{1},{2},{3},{4},{5}", rowId, species.Name, toDBFormat(species.SpeciesType), species.SurveyLevel, species.Images.Count, string.Format("\"{0}\"", info.ToString()));
+                csv.AppendLine(entry);
+                rowId++;
+            }
+
+            File.WriteAllText("C://Users/David/Desktop/test.csv", csv.ToString());
+        }
+
+        private string toDBFormat(SpeciesType type)
+        {
+            switch (type)
+            {
+                case SpeciesType.Invert:
+                    return "Invertebrate";
+                default:
+                    return type.ToString();
+            }
+        }
     }
 }
