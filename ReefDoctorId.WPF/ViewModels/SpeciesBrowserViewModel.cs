@@ -219,7 +219,7 @@ namespace ReefDoctorId.ViewModels
             }
         }
 
-        private List<SpeciesType> _speciesSelections = new List<SpeciesType> { SpeciesType.Fish, SpeciesType.FishFamily, SpeciesType.Invert, SpeciesType.Benthic, SpeciesType.Coral, SpeciesType.Seagrass };
+        private List<SpeciesType> _speciesSelections = new List<SpeciesType> { SpeciesType.Fish, SpeciesType.FishFamily, SpeciesType.Invertebrate, SpeciesType.Benthic, SpeciesType.Coral, SpeciesType.Seagrass };
         public List<SpeciesType> SpeciesSelections
         {
             get
@@ -395,7 +395,7 @@ namespace ReefDoctorId.ViewModels
                     }
                 }
 
-                var entry = string.Format("{0},{1},{2},{3},{4},{5}", rowId, species.Name, toDBFormat(species.SpeciesType), species.SurveyLevel, species.Images.Count, string.Format("\"{0}\"", info.ToString()));
+                var entry = string.Format("{0},{1},{2},{3},{4},{5}", rowId, species.Name, species.SpeciesType, getSurveyLevel(species), species.Images.Count, string.Format("\"{0}\"", info.ToString()));
                 csv.AppendLine(entry);
                 rowId++;
             }
@@ -403,15 +403,9 @@ namespace ReefDoctorId.ViewModels
             File.WriteAllText("C://Users/David/Desktop/test.csv", csv.ToString());
         }
 
-        private string toDBFormat(SpeciesType type)
+        private SurveyLevel getSurveyLevel(Subject species)
         {
-            switch (type)
-            {
-                case SpeciesType.Invert:
-                    return "Invertebrate";
-                default:
-                    return type.ToString();
-            }
+            return (species.SpeciesType == SpeciesType.Fish || species.SpeciesType == SpeciesType.Benthic || species.SpeciesType == SpeciesType.Invertebrate) ? species.SurveyLevel : SurveyLevel.NA;
         }
     }
 }

@@ -440,7 +440,7 @@ namespace ReefDoctorId.ViewModels
                     }
 
                     // Fetch NA Items
-                    if (LaunchContext.SpeciesType == SpeciesType.Fish || LaunchContext.SpeciesType == SpeciesType.Invert)
+                    if (LaunchContext.SpeciesType == SpeciesType.Fish || LaunchContext.SpeciesType == SpeciesType.Invertebrate)
                     {
                         var NAItems = _speciesDataModel.SpeciesData.Where(item => item.SpeciesType == _launchContext.SpeciesType && item.IsNA).ToList();
                         NAItems.Shuffle();

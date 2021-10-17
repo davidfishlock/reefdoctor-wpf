@@ -274,14 +274,22 @@ namespace ReefDoctorId.WPF.Models
                 else
                 {
                     // Fetch NA Items
-                    var NAFolder = speciesTypeFolder.GetDirectories("NA").First();
-                    items.AddRange(FetchNAItems(NAFolder, speciesType));
+                    var NAFolder = speciesTypeFolder.GetDirectories("NA").FirstOrDefault();
 
-                    // Add Nudibranchs!
-                    if (speciesType == SpeciesType.Invert)
+                    if (NAFolder != null)
                     {
-                        var nudibranchFolder = NAFolder.GetDirectories("Nudibranchs").First();
-                        items.AddRange(FetchNAItems(nudibranchFolder, speciesType));
+                        items.AddRange(FetchNAItems(NAFolder, speciesType));
+
+                        // Add Nudibranchs!
+                        if (speciesType == SpeciesType.Invertebrate)
+                        {
+                            var nudibranchFolder = NAFolder.GetDirectories("Nudibranchs").FirstOrDefault();
+
+                            if (nudibranchFolder != null)
+                            {
+                                items.AddRange(FetchNAItems(nudibranchFolder, speciesType));
+                            }
+                        }
                     }
                 }
             }
@@ -323,7 +331,7 @@ namespace ReefDoctorId.WPF.Models
             // Load all species data
             SpeciesData = new List<Subject>();
             SpeciesData.AddRange(LoadSpeciesData(SpeciesType.Fish));
-            SpeciesData.AddRange(LoadSpeciesData(SpeciesType.Invert));
+            SpeciesData.AddRange(LoadSpeciesData(SpeciesType.Invertebrate));
             SpeciesData.AddRange(LoadSpeciesData(SpeciesType.Benthic));
             SpeciesData.AddRange(LoadSpeciesData(SpeciesType.FishFamily));
             SpeciesData.AddRange(LoadSpeciesData(SpeciesType.Coral));

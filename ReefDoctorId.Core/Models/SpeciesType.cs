@@ -3,7 +3,7 @@
     public enum SpeciesType
     {
         Fish,
-        Invert,
+        Invertebrate,
         Benthic,
         FishFamily,
         Coral,
