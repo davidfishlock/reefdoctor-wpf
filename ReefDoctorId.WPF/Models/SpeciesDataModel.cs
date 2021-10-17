@@ -121,10 +121,8 @@ namespace ReefDoctorId.WPF.Models
                 {
                     Name = folder.Name,
                     Images = imagePaths,
-                    JuvenileImages = juvenileImagePaths,
                     ImagePath = imagePaths[_random.Next(0, imagePaths.Count - 1)],
                     Info = GetSpeciesInfo(folder),
-                    Similar = similarItems
                 };
             }
 #if DEBUG
