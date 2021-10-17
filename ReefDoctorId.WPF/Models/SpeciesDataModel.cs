@@ -101,33 +101,11 @@ namespace ReefDoctorId.WPF.Models
         {
             var images = folder.GetFiles().Where(file => Extensions.IsImage(file.Extension)).ToList();
 
-            var speciesImages = images.Where(file => !file.Name.Contains("Similar")).ToList();
-            var similarImages = images.Where(file => file.Name.Contains("Similar")).ToList();
-            var juvenileImages = images.Where(file => file.Name.Contains("Juvenile")).ToList();
-            var similarItems = new List<Subject>();
-
-            foreach (var file in similarImages)
-            {
-                var name = file.Name.Split('.').First();
-                name = name.Replace("Similar - ", "");
-                similarItems.Add(new Subject() { Name = name, Images = new List<string>() { file.FullName }, ImagePath = file.FullName });
-            }
-
-            var juvenileImagePaths = new List<string>();
-
-            if (juvenileImages.Count > 0)
-            {
-                foreach (var image in juvenileImages)
-                {
-                    juvenileImagePaths.Add(image.FullName);
-                }
-            }
-
-            if (speciesImages.Count > 0)
+            if (images.Count > 0)
             {
                 var imagePaths = new List<string>();
 
-                foreach (var image in speciesImages)
+                foreach (var image in images)
                 {
                     imagePaths.Add(image.FullName);
                 }
@@ -158,64 +136,6 @@ namespace ReefDoctorId.WPF.Models
 #endif
         }
 
-        private List<Subject> FetchNAItems(DirectoryInfo folder, SpeciesType speciesType, int numberItems = 0)
-        {
-            var files = folder.GetFiles();
-            var NAFiles = files.ToList();
-            NAFiles.Shuffle();
-
-            var NAItems = new List<Subject>();
-
-            var numbers = new[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", " ", "(", ")", "_", "-" };
-
-            foreach (var file in NAFiles)
-            {
-                var name = file.Name.Split('.').First();
-
-                // Strip Numbers from end of name
-                if (folder.Name == "NA")
-                {
-                    while (name.Length > 0)
-                    {
-                        if (numbers.Any(item => item.Equals(name.Substring(name.Length - 1))))
-                        {
-                            name = name.Substring(0, name.Length - 1);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                }
-                else if (folder.Name == "Nudibranchs")
-                {
-                    name = "Nudibranch";
-                }
-
-                var existingItem = NAItems.FirstOrDefault(item => item.Name == name);
-
-                if (existingItem != null)
-                {
-                    existingItem.Images.Add(file.FullName);
-                    existingItem.ImagePath = existingItem.Images[_random.Next(0, existingItem.Images.Count - 1)];
-                }
-                else
-                {
-                    NAItems.Add(new Subject
-                    {
-                        Name = name,
-                        SurveyLevel = SurveyLevel.NA,
-                        SpeciesType = speciesType,
-                        IsNA = true,
-                        Images = new List<string>() { file.FullName },
-                        ImagePath = file.FullName
-                    });
-                }
-            }
-
-            return numberItems > 0 ? NAItems.Take(numberItems).ToList() : NAItems;
-        }
-
         private List<Subject> LoadSpeciesData(SpeciesType speciesType)
         {
             var appFolder = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
@@ -227,7 +147,7 @@ namespace ReefDoctorId.WPF.Models
             if (speciesType != SpeciesType.FishFamily && speciesType != SpeciesType.Coral && speciesType != SpeciesType.Seagrass)
             {
                 // Take Indicator Species
-                var indicatorFolder = speciesTypeFolder.GetDirectories("Indicator").First();
+                var indicatorFolder = speciesTypeFolder.GetDirectories("Indicator").FirstOrDefault();
                 foreach (var folder in indicatorFolder.GetDirectories())
                 {
                     var subject = CreateSubject(folder);
@@ -244,7 +164,7 @@ namespace ReefDoctorId.WPF.Models
                 }
 
                 // Take Expert Species
-                var expertFolder = speciesTypeFolder.GetDirectories("Expert").First();
+                var expertFolder = speciesTypeFolder.GetDirectories("Expert").FirstOrDefault();
 
                 foreach (var folder in expertFolder.GetDirectories())
                 {
@@ -261,6 +181,27 @@ namespace ReefDoctorId.WPF.Models
                     }
                 }
 
+                if (speciesType == SpeciesType.Fish || speciesType == SpeciesType.Invertebrate)
+                {
+                    // Take NA Species
+                    var naFolder = speciesTypeFolder.GetDirectories("NA").FirstOrDefault();
+
+                    foreach (var folder in naFolder.GetDirectories())
+                    {
+                        var subject = CreateSubject(folder);
+                        if (subject != null)
+                        {
+                            subject.SurveyLevel = SurveyLevel.NA;
+                            subject.SpeciesType = speciesType;
+                            items.Add(subject);
+                        }
+                        else
+                        {
+                            Debug.WriteLine("Data Issues: Failed to create model for: " + folder.Name);
+                        }
+                    }
+                }
+
                 if (speciesType == SpeciesType.Benthic)
                 {
                     // Apply display strings for Benthic
@@ -269,27 +210,6 @@ namespace ReefDoctorId.WPF.Models
                         benthicCode.Name = benthicCode.SurveyLevel == SurveyLevel.Indicator ?
                             _indicatorBenthicStrings.Where(item => item.EndsWith(" " + benthicCode.Name)).ToList().FirstOrDefault() :
                             _expertBenthicStrings.Where(item => item.EndsWith(" " + benthicCode.Name)).ToList().FirstOrDefault();
-                    }
-                }
-                else
-                {
-                    // Fetch NA Items
-                    var NAFolder = speciesTypeFolder.GetDirectories("NA").FirstOrDefault();
-
-                    if (NAFolder != null)
-                    {
-                        items.AddRange(FetchNAItems(NAFolder, speciesType));
-
-                        // Add Nudibranchs!
-                        if (speciesType == SpeciesType.Invertebrate)
-                        {
-                            var nudibranchFolder = NAFolder.GetDirectories("Nudibranchs").FirstOrDefault();
-
-                            if (nudibranchFolder != null)
-                            {
-                                items.AddRange(FetchNAItems(nudibranchFolder, speciesType));
-                            }
-                        }
                     }
                 }
             }
