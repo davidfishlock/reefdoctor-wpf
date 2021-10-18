@@ -11,68 +11,9 @@ namespace ReefDoctorId.WPF.Models
 {
     public class SpeciesDataModel
     {
-        private List<string> _indicatorBenthicStrings = new List<string>();
-        private List<string> _expertBenthicStrings = new List<string>();
-        private List<string> _seagrassStrings = new List<string>();
-
         private Random _random = new Random();
 
         public List<Subject> SpeciesData { get; set; }
-
-        private void LoadCodeStrings()
-        {
-            var appFolder = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
-
-            var dataFolder = appFolder.GetDirectories("Species Data").First();
-            var benthicFolder = dataFolder.GetDirectories("Benthic").First();
-            var seagrassFolder = dataFolder.GetDirectories("Seagrass").First();
-
-            var indicatorBenthicFile = benthicFolder.GetFiles("IndicatorCodes.txt").FirstOrDefault();
-            var expertBenthicFile = benthicFolder.GetFiles("ExpertCodes.txt").FirstOrDefault();
-            var seagrassFile = seagrassFolder.GetFiles("Codes.txt").FirstOrDefault();
-
-            if (indicatorBenthicFile != null)
-            {
-                using (var indicatorStream = indicatorBenthicFile.OpenRead())
-                {
-                    using (var streamReader = new StreamReader(indicatorStream))
-                    {
-                        while (streamReader.Peek() >= 0)
-                        {
-                            _indicatorBenthicStrings.Add(streamReader.ReadLine());
-                        }
-                    }
-                }
-            }
-
-            if (expertBenthicFile != null)
-            {
-                using (var expertStream = expertBenthicFile.OpenRead())
-                {
-                    using (var streamReader = new StreamReader(expertStream))
-                    {
-                        while (streamReader.Peek() >= 0)
-                        {
-                            _expertBenthicStrings.Add(streamReader.ReadLine());
-                        }
-                    }
-                }
-            }
-
-            if (seagrassFile != null)
-            {
-                using (var seagrassStream = seagrassFile.OpenRead())
-                {
-                    using (var streamReader = new StreamReader(seagrassStream))
-                    {
-                        while (streamReader.Peek() >= 0)
-                        {
-                            _seagrassStrings.Add(streamReader.ReadLine());
-                        }
-                    }
-                }
-            }
-        }
 
         private List<string> GetSpeciesInfo(DirectoryInfo folder)
         {
@@ -199,17 +140,6 @@ namespace ReefDoctorId.WPF.Models
                         }
                     }
                 }
-
-                if (speciesType == SpeciesType.Benthic)
-                {
-                    // Apply display strings for Benthic
-                    foreach (var benthicCode in items)
-                    {
-                        benthicCode.Name = benthicCode.SurveyLevel == SurveyLevel.Indicator ?
-                            _indicatorBenthicStrings.Where(item => item.EndsWith(" " + benthicCode.Name)).ToList().FirstOrDefault() :
-                            _expertBenthicStrings.Where(item => item.EndsWith(" " + benthicCode.Name)).ToList().FirstOrDefault();
-                    }
-                }
             }
             else if (speciesType == SpeciesType.FishFamily || speciesType == SpeciesType.Coral || speciesType == SpeciesType.Seagrass)
             {
@@ -227,15 +157,6 @@ namespace ReefDoctorId.WPF.Models
                         Debug.WriteLine("Data Issues: Failed to create model for: " + folder.Name);
                     }
                 }
-
-                if (speciesType == SpeciesType.Seagrass)
-                {
-                    // Apply display strings for Seagrass
-                    foreach (var seagrassCode in items)
-                    {
-                        seagrassCode.Name = _seagrassStrings.Where(item => item.EndsWith(" " + seagrassCode.Name)).ToList().FirstOrDefault();
-                    }
-                }
             }
 
             return items;
@@ -243,9 +164,6 @@ namespace ReefDoctorId.WPF.Models
 
         public void LoadData()
         {
-            // Load code string mappings
-            LoadCodeStrings();
-
             // Load all species data
             SpeciesData = new List<Subject>();
             SpeciesData.AddRange(LoadSpeciesData(SpeciesType.Fish));
